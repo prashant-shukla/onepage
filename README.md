@@ -77,7 +77,7 @@ You’re free to customize, fork, and use it in your own projects.
 
 ## 🙌 Credits  
 
-Built with ❤️ by [Your Name / Pacific Softwares].  
+Built with ❤️ by Pacific Softwares.  
 
 ---
 
