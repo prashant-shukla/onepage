@@ -1,0 +1,214 @@
+<div class="login-template">
+  <div class="login-template__container">
+    <div class="login-template__content">
+      <div class="login-template__header">
+        <h1 class="login-template__title">Sign In</h1>
+        <p class="login-template__subtitle">Welcome back! Please sign in to your account.</p>
+      </div>
+
+      <div class="login-template__form-container">
+        {%- form 'customer_login', class: 'login-template__form' -%}
+          {%- if form.errors -%}
+            <div class="login-template__errors">
+              <h2 class="login-template__error-title">Please correct the following errors:</h2>
+              <ul class="login-template__error-list">
+                {%- for field in form.errors -%}
+                  <li class="login-template__error-item">
+                    {{ form.errors[field] }}
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          {%- endif -%}
+
+          <div class="login-template__field">
+            <label for="CustomerEmail" class="login-template__label">Email</label>
+            <input 
+              type="email" 
+              id="CustomerEmail" 
+              name="customer[email]" 
+              class="login-template__input"
+              autocomplete="email"
+              required
+            >
+          </div>
+
+          <div class="login-template__field">
+            <label for="CustomerPassword" class="login-template__label">Password</label>
+            <input 
+              type="password" 
+              id="CustomerPassword" 
+              name="customer[password]" 
+              class="login-template__input"
+              autocomplete="current-password"
+              required
+            >
+          </div>
+
+          <div class="login-template__actions">
+            <button type="submit" class="button button--primary button--large">
+              Sign In
+            </button>
+          </div>
+
+          <div class="login-template__links">
+            <a href="{{ routes.account_recover_url }}" class="login-template__link">
+              Forgot your password?
+            </a>
+            <a href="{{ routes.account_register_url }}" class="login-template__link">
+              Create an account
+            </a>
+          </div>
+        {%- endform -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .login-template {
+    padding: 4rem 0;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  }
+
+  .login-template__container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .login-template__content {
+    background: white;
+    padding: 3rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  }
+
+  .login-template__header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .login-template__title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+  }
+
+  .login-template__subtitle {
+    font-size: 1.2rem;
+    color: #6c757d;
+  }
+
+  .login-template__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .login-template__errors {
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .login-template__error-title {
+    font-size: 1.2rem;
+    color: #721c24;
+    margin-bottom: 0.5rem;
+  }
+
+  .login-template__error-list {
+    margin: 0;
+    padding-left: 1.5rem;
+  }
+
+  .login-template__error-item {
+    color: #721c24;
+    font-size: 1.1rem;
+  }
+
+  .login-template__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .login-template__label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2c3e50;
+  }
+
+  .login-template__input {
+    padding: 1rem 1.2rem;
+    border: 2px solid #e5e5e5;
+    border-radius: 0.5rem;
+    font-size: 1.2rem;
+    transition: border-color 0.3s ease;
+  }
+
+  .login-template__input:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+
+  .login-template__actions {
+    margin-top: 1rem;
+  }
+
+  .button--large {
+    width: 100%;
+    padding: 1.2rem 2rem;
+    font-size: 1.3rem;
+  }
+
+  .login-template__links {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .login-template__link {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+  }
+
+  .login-template__link:hover {
+    color: #0056b3;
+  }
+
+  @media (max-width: 768px) {
+    .login-template__content {
+      padding: 2rem;
+    }
+
+    .login-template__title {
+      font-size: 2rem;
+    }
+
+    .login-template__links {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Login Template",
+  "tag": "section",
+  "class": "section",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,400 @@
+<section class="trust-section color-{{ section.settings.color_scheme }} gradient">
+  <div class="trust-section__container">
+    {%- if section.settings.heading != blank -%}
+      <div class="trust-section__header">
+        <h2 class="trust-section__title">{{ section.settings.heading }}</h2>
+        {%- if section.settings.subheading != blank -%}
+          <p class="trust-section__subtitle">{{ section.settings.subheading }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="trust-section__content">
+      <div class="trust-section__guarantees">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'guarantee' -%}
+            <div class="trust-section__guarantee" {{ block.shopify_attributes }}>
+              <div class="trust-section__guarantee-icon">
+                {%- if block.settings.icon != blank -%}
+                  {{ block.settings.icon | image_url: width: 40 | image_tag: alt: block.settings.title }}
+                {%- else -%}
+                  <div class="trust-section__guarantee-icon-placeholder">
+                    {{ block.settings.icon_text | default: '✓' }}
+                  </div>
+                {%- endif -%}
+              </div>
+              <div class="trust-section__guarantee-content">
+                <h3 class="trust-section__guarantee-title">{{ block.settings.title }}</h3>
+                <p class="trust-section__guarantee-description">{{ block.settings.description }}</p>
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      <div class="trust-section__payment">
+        {%- if section.settings.payment_heading != blank -%}
+          <h3 class="trust-section__payment-title">{{ section.settings.payment_heading }}</h3>
+        {%- endif -%}
+        
+        <div class="trust-section__payment-methods">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'payment_method' -%}
+              <div class="trust-section__payment-method" {{ block.shopify_attributes }}>
+                {%- if block.settings.payment_icon != blank -%}
+                  {{ block.settings.payment_icon | image_url: width: 60 | image_tag: alt: block.settings.payment_name }}
+                {%- else -%}
+                  <div class="trust-section__payment-placeholder">
+                    {{ block.settings.payment_name }}
+                  </div>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+
+      {%- if section.settings.security_badges != blank -%}
+        <div class="trust-section__security">
+          <h3 class="trust-section__security-title">Security & Trust</h3>
+          <div class="trust-section__security-badges">
+            {{ section.settings.security_badges }}
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .trust-section {
+    padding: 6rem 0;
+    background: var(--color-base-background-2);
+  }
+
+  .trust-section__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .trust-section__header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .trust-section__title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--color-base-text);
+  }
+
+  .trust-section__subtitle {
+    font-size: 1.2rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .trust-section__content {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+  }
+
+  .trust-section__guarantees {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .trust-section__guarantee {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 2rem;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .trust-section__guarantee:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .trust-section__guarantee-icon {
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-base-accent-1);
+    border-radius: 50%;
+  }
+
+  .trust-section__guarantee-icon img {
+    width: 30px;
+    height: 30px;
+    filter: brightness(0) invert(1);
+  }
+
+  .trust-section__guarantee-icon-placeholder {
+    font-size: 1.5rem;
+    color: white;
+    font-weight: bold;
+  }
+
+  .trust-section__guarantee-content {
+    flex: 1;
+  }
+
+  .trust-section__guarantee-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--color-base-text);
+  }
+
+  .trust-section__guarantee-description {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  .trust-section__payment {
+    text-align: center;
+  }
+
+  .trust-section__payment-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    color: var(--color-base-text);
+  }
+
+  .trust-section__payment-methods {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .trust-section__payment-method {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+  }
+
+  .trust-section__payment-method:hover {
+    transform: translateY(-2px);
+  }
+
+  .trust-section__payment-method img {
+    max-width: 60px;
+    max-height: 40px;
+    width: auto;
+    height: auto;
+  }
+
+  .trust-section__payment-placeholder {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #666;
+  }
+
+  .trust-section__security {
+    text-align: center;
+  }
+
+  .trust-section__security-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    color: var(--color-base-text);
+  }
+
+  .trust-section__security-badges {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .trust-section__security-badges img {
+    max-width: 120px;
+    max-height: 60px;
+    width: auto;
+    height: auto;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+  }
+
+  .trust-section__security-badges img:hover {
+    opacity: 1;
+  }
+
+  @media (max-width: 768px) {
+    .trust-section__guarantees {
+      grid-template-columns: 1fr;
+    }
+
+    .trust-section__guarantee {
+      padding: 1.5rem;
+    }
+
+    .trust-section__payment-methods {
+      gap: 1rem;
+    }
+
+    .trust-section__title {
+      font-size: 2.5rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Trust Section",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Shop With Confidence"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Your satisfaction and security are our top priorities"
+    },
+    {
+      "type": "text",
+      "id": "payment_heading",
+      "label": "Payment Methods Heading",
+      "default": "Secure Payment Methods"
+    },
+    {
+      "type": "html",
+      "id": "security_badges",
+      "label": "Security Badges HTML",
+      "info": "Add HTML for security badges (SSL, Trustpilot, etc.)"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "background-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "guarantee",
+      "name": "Guarantee",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon Image"
+        },
+        {
+          "type": "text",
+          "id": "icon_text",
+          "label": "Icon Text",
+          "default": "✓",
+          "info": "Used if no icon image is provided"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "30-Day Money Back Guarantee"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description",
+          "default": "Not satisfied? Return your purchase within 30 days for a full refund."
+        }
+      ]
+    },
+    {
+      "type": "payment_method",
+      "name": "Payment Method",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "payment_icon",
+          "label": "Payment Icon"
+        },
+        {
+          "type": "text",
+          "id": "payment_name",
+          "label": "Payment Name",
+          "default": "Visa"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust Section",
+      "blocks": [
+        {
+          "type": "guarantee",
+          "settings": {
+            "title": "30-Day Money Back Guarantee",
+            "description": "Not satisfied? Return your purchase within 30 days for a full refund."
+          }
+        },
+        {
+          "type": "guarantee",
+          "settings": {
+            "title": "Free Shipping",
+            "description": "Free shipping on all orders over $50. Fast and reliable delivery."
+          }
+        },
+        {
+          "type": "guarantee",
+          "settings": {
+            "title": "Secure Checkout",
+            "description": "Your payment information is encrypted and secure with 256-bit SSL."
+          }
+        },
+        {
+          "type": "payment_method",
+          "settings": {
+            "payment_name": "Visa"
+          }
+        },
+        {
+          "type": "payment_method",
+          "settings": {
+            "payment_name": "Mastercard"
+          }
+        },
+        {
+          "type": "payment_method",
+          "settings": {
+            "payment_name": "PayPal"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,325 @@
+<div class="hero-banner">
+  <div class="hero-banner__container">
+    <div class="hero-banner__content">
+      <h1 class="hero-banner__title">{{ section.settings.title | default: 'Welcome to Our Store' }}</h1>
+      <p class="hero-banner__subtitle">{{ section.settings.subtitle | default: 'Discover amazing products at great prices' }}</p>
+      <div class="hero-banner__actions">
+        <a href="{{ section.settings.button_url | default: routes.all_products_collection_url }}" class="button button--primary button--large">
+          {{ section.settings.button_text | default: 'Shop Now' }}
+        </a>
+        <a href="{{ section.settings.secondary_button_url | default: '/pages/about' }}" class="button button--secondary button--large">
+          {{ section.settings.secondary_button_text | default: 'Learn More' }}
+        </a>
+      </div>
+    </div>
+    <div class="hero-banner__media">
+      {%- if section.settings.video_url != blank -%}
+        <div class="hero-banner__video-container">
+          {%- if section.settings.video_url contains 'youtube.com' or section.settings.video_url contains 'youtu.be' -%}
+            {%- assign video_id = section.settings.video_url | split: 'v=' | last | split: '&' | first -%}
+            {%- if section.settings.video_url contains 'youtu.be' -%}
+              {%- assign video_id = section.settings.video_url | split: 'youtu.be/' | last | split: '?' | first -%}
+            {%- endif -%}
+            <iframe 
+              class="hero-banner__video" 
+              src="https://www.youtube.com/embed/{{ video_id }}?autoplay={{ section.settings.video_autoplay | default: false }}&mute={{ section.settings.video_mute | default: true }}&loop={{ section.settings.video_loop | default: true }}&controls={{ section.settings.video_controls | default: false }}&showinfo=0&rel=0"
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowfullscreen>
+            </iframe>
+          {%- elsif section.settings.video_url contains 'vimeo.com' -%}
+            {%- assign video_id = section.settings.video_url | split: 'vimeo.com/' | last | split: '?' | first -%}
+            <iframe 
+              class="hero-banner__video" 
+              src="https://player.vimeo.com/video/{{ video_id }}?autoplay={{ section.settings.video_autoplay | default: false }}&muted={{ section.settings.video_mute | default: true }}&loop={{ section.settings.video_loop | default: true }}&controls={{ section.settings.video_controls | default: false }}&title=0&byline=0&portrait=0"
+              frameborder="0" 
+              allow="autoplay; fullscreen; picture-in-picture" 
+              allowfullscreen>
+            </iframe>
+          {%- endif -%}
+        </div>
+      {%- elsif section.settings.image != blank -%}
+        {{ section.settings.image | image_url: width: 800 | image_tag: 
+          alt: section.settings.image.alt | default: section.settings.title,
+          class: 'hero-banner__img'
+        }}
+      {%- else -%}
+        <div class="hero-banner__placeholder">
+          <svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="300" fill="#f3f3f3"/>
+            <path d="M100 50H300V250H100V50Z" stroke="#ccc" stroke-width="2" fill="none"/>
+            <path d="M120 80H280V220H120V80Z" fill="#ddd"/>
+          </svg>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .hero-banner {
+    padding: 6rem 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.05"><circle cx="30" cy="30" r="4"/></g></svg>') repeat;
+    animation: float 20s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+
+  .hero-banner__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-banner__content {
+    color: white;
+  }
+
+  .hero-banner__title {
+    font-size: 4.5rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  }
+
+  .hero-banner__subtitle {
+    font-size: 1.8rem;
+    margin-bottom: 3rem;
+    opacity: 0.9;
+    line-height: 1.6;
+  }
+
+  .hero-banner__actions {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .hero-banner .button--secondary {
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    border: 2px solid rgba(255, 255, 255, 1);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    font-weight: 600;
+    text-shadow: none;
+  }
+
+  .hero-banner .button--secondary:hover {
+    background: white;
+    border-color: white;
+    color: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.4);
+  }
+
+  .hero-banner__media {
+    position: relative;
+  }
+
+  .hero-banner__video-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    max-width: 600px;
+    border-radius: 2rem;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease;
+  }
+
+  .hero-banner__video-container:hover {
+    transform: scale(1.02);
+  }
+
+  .hero-banner__video {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 2rem;
+  }
+
+  .hero-banner__img {
+    width: 100%;
+    height: 400px;
+    max-width: 600px;
+    object-fit: cover;
+    border-radius: 2rem;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease;
+  }
+
+  .hero-banner__img:hover {
+    transform: scale(1.02);
+  }
+
+  .hero-banner__placeholder {
+    width: 100%;
+    height: 400px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+  }
+
+  @media (max-width: 768px) {
+    .hero-banner__container {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      text-align: center;
+    }
+
+    .hero-banner__title {
+      font-size: 3rem;
+    }
+
+    .hero-banner__subtitle {
+      font-size: 1.5rem;
+    }
+
+    .hero-banner__actions {
+      justify-content: center;
+    }
+
+    .hero-banner__video-container,
+    .hero-banner__img {
+      height: 300px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero-banner__video-container,
+    .hero-banner__img {
+      height: 250px;
+    }
+
+    .hero-banner__title {
+      font-size: 2.5rem;
+    }
+
+    .hero-banner__subtitle {
+      font-size: 1.3rem;
+    }
+
+    .hero-banner__actions {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hero-banner__actions .button {
+      width: 100%;
+      max-width: 300px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Hero Banner",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Welcome to Our Store"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Discover amazing products at great prices"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_text",
+      "label": "Secondary Button Text",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_url",
+      "label": "Secondary Button URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero Image",
+      "info": "Leave blank if using video"
+    },
+    {
+      "type": "header",
+      "content": "Video Settings"
+    },
+    {
+      "type": "url",
+      "id": "video_url",
+      "label": "Video URL",
+      "info": "YouTube or Vimeo URL (e.g., https://www.youtube.com/watch?v=VIDEO_ID or https://vimeo.com/VIDEO_ID)"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_autoplay",
+      "label": "Autoplay Video",
+      "default": false,
+      "info": "Note: Videos with sound will be muted by default for better user experience"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_mute",
+      "label": "Mute Video",
+      "default": true,
+      "info": "Recommended for autoplay videos"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_loop",
+      "label": "Loop Video",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "video_controls",
+      "label": "Show Video Controls",
+      "default": false,
+      "info": "Show play/pause and other video controls"
+    }
+  ]
+}
+{% endschema %}

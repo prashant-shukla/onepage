@@ -1,0 +1,274 @@
+<div class="account-template">
+  <div class="account-template__container">
+    <div class="account-template__header">
+      <h1 class="account-template__title">My Account</h1>
+      <p class="account-template__subtitle">Welcome back, {{ customer.first_name }}!</p>
+    </div>
+
+    <div class="account-template__content">
+      <div class="account-template__sidebar">
+        <nav class="account-template__nav">
+          <a href="{{ routes.account_url }}" class="account-template__nav-link account-template__nav-link--active">
+            Account Details
+          </a>
+          <a href="{{ routes.account_addresses_url }}" class="account-template__nav-link">
+            Addresses
+          </a>
+          <a href="{{ routes.account_logout_url }}" class="account-template__nav-link">
+            Logout
+          </a>
+        </nav>
+      </div>
+
+      <div class="account-template__main">
+        <div class="account-template__section">
+          <h2 class="account-template__section-title">Account Information</h2>
+          <div class="account-template__info">
+            <div class="account-template__info-item">
+              <span class="account-template__info-label">Name:</span>
+              <span class="account-template__info-value">{{ customer.name }}</span>
+            </div>
+            <div class="account-template__info-item">
+              <span class="account-template__info-label">Email:</span>
+              <span class="account-template__info-value">{{ customer.email }}</span>
+            </div>
+            <div class="account-template__info-item">
+              <span class="account-template__info-label">Member since:</span>
+              <span class="account-template__info-value">{{ customer.created_at | date: '%B %Y' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="account-template__section">
+          <h2 class="account-template__section-title">Recent Orders</h2>
+          {%- if customer.orders.size > 0 -%}
+            <div class="account-template__orders">
+              {%- for order in customer.orders limit: 5 -%}
+                <div class="account-template__order">
+                  <div class="account-template__order-info">
+                    <div class="account-template__order-number">
+                      Order #{{ order.name }}
+                    </div>
+                    <div class="account-template__order-date">
+                      {{ order.created_at | date: '%B %d, %Y' }}
+                    </div>
+                  </div>
+                  <div class="account-template__order-status">
+                    <span class="account-template__status-badge account-template__status-badge--{{ order.fulfillment_status | default: 'unfulfilled' }}">
+                      {{ order.fulfillment_status | default: 'Unfulfilled' | capitalize }}
+                    </span>
+                  </div>
+                  <div class="account-template__order-total">
+                    {{ order.total_price | money }}
+                  </div>
+                </div>
+              {%- endfor -%}
+            </div>
+          {%- else -%}
+            <p class="account-template__no-orders">You haven't placed any orders yet.</p>
+            <a href="{{ routes.all_products_collection_url }}" class="button button--primary">
+              Start Shopping
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .account-template {
+    padding: 2rem 0;
+    min-height: 60vh;
+  }
+
+  .account-template__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .account-template__header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .account-template__title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+  }
+
+  .account-template__subtitle {
+    font-size: 1.3rem;
+    color: #6c757d;
+  }
+
+  .account-template__content {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 3rem;
+  }
+
+  .account-template__sidebar {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 1rem;
+    height: fit-content;
+  }
+
+  .account-template__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .account-template__nav-link {
+    padding: 1rem 1.5rem;
+    color: #6c757d;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    font-weight: 500;
+  }
+
+  .account-template__nav-link:hover,
+  .account-template__nav-link--active {
+    background: #007bff;
+    color: white;
+  }
+
+  .account-template__main {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .account-template__section {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .account-template__section-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+  }
+
+  .account-template__info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .account-template__info-item {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .account-template__info-label {
+    font-weight: 600;
+    color: #6c757d;
+    min-width: 120px;
+  }
+
+  .account-template__info-value {
+    color: #2c3e50;
+  }
+
+  .account-template__orders {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .account-template__order {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+  }
+
+  .account-template__order-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .account-template__order-number {
+    font-weight: 600;
+    color: #2c3e50;
+  }
+
+  .account-template__order-date {
+    font-size: 1.1rem;
+    color: #6c757d;
+  }
+
+  .account-template__order-status {
+    display: flex;
+    align-items: center;
+  }
+
+  .account-template__status-badge {
+    padding: 0.3rem 0.8rem;
+    border-radius: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .account-template__status-badge--fulfilled {
+    background: #d4edda;
+    color: #155724;
+  }
+
+  .account-template__status-badge--unfulfilled {
+    background: #f8d7da;
+    color: #721c24;
+  }
+
+  .account-template__order-total {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #2c3e50;
+  }
+
+  .account-template__no-orders {
+    color: #6c757d;
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .account-template__content {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .account-template__order {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .account-template__title {
+      font-size: 2.5rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Account Template",
+  "tag": "section",
+  "class": "section",
+  "settings": []
+}
+{% endschema %}

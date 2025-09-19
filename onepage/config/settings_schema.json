@@ -1,0 +1,360 @@
+[
+  {
+    "name": "Theme",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Branding"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo",
+        "info": "Upload your store logo. Recommended size: 200x60px"
+      },
+      {
+        "type": "range",
+        "id": "logo_width",
+        "min": 50,
+        "max": 300,
+        "step": 10,
+        "default": 150,
+        "unit": "px",
+        "label": "Logo width"
+      },
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon",
+        "info": "Upload a favicon for your store. Recommended size: 32x32px"
+      },
+      {
+        "type": "header",
+        "content": "Navigation"
+      },
+      {
+        "type": "link_list",
+        "id": "main_menu",
+        "label": "Main menu",
+        "default": "main-menu",
+        "info": "Select the menu to display in the header"
+      },
+      {
+        "type": "checkbox",
+        "id": "sticky_menu",
+        "label": "Sticky menu",
+        "default": true,
+        "info": "Make the header stick to the top when scrolling"
+      },
+      {
+        "type": "header",
+        "content": "Colors"
+      },
+      {
+        "type": "color",
+        "id": "primary_color",
+        "label": "Primary color",
+        "default": "#007bff",
+        "info": "Used for buttons, links, and accents"
+      },
+      {
+        "type": "color",
+        "id": "secondary_color",
+        "label": "Secondary color",
+        "default": "#6c757d",
+        "info": "Used for secondary text and elements"
+      },
+      {
+        "type": "color",
+        "id": "accent_color",
+        "label": "Accent color",
+        "default": "#28a745",
+        "info": "Used for success states and highlights"
+      },
+      {
+        "type": "header",
+        "content": "Typography"
+      },
+      {
+        "type": "font_picker",
+        "id": "heading_font",
+        "label": "Heading font",
+        "default": "assistant_n4"
+      },
+      {
+        "type": "font_picker",
+        "id": "body_font",
+        "label": "Body font",
+        "default": "assistant_n4"
+      },
+      {
+        "type": "header",
+        "content": "Layout"
+      },
+      {
+        "type": "range",
+        "id": "page_width",
+        "min": 1000,
+        "max": 1600,
+        "step": 10,
+        "default": 1200,
+        "unit": "px",
+        "label": "Page width"
+      },
+      {
+        "type": "range",
+        "id": "header_height",
+        "min": 60,
+        "max": 100,
+        "step": 5,
+        "default": 75,
+        "unit": "px",
+        "label": "Header height"
+      },
+      {
+        "type": "header",
+        "content": "Hero Banner"
+      },
+      {
+        "type": "select",
+        "id": "hero_banner_size",
+        "label": "Hero banner size",
+        "options": [
+          {
+            "value": "small",
+            "label": "Small"
+          },
+          {
+            "value": "medium",
+            "label": "Medium"
+          },
+          {
+            "value": "large",
+            "label": "Large"
+          }
+        ],
+        "default": "medium",
+        "info": "Choose the height of the hero banner"
+      },
+      {
+        "type": "text",
+        "id": "hero_title",
+        "label": "Hero title",
+        "default": "Welcome to Our Store"
+      },
+      {
+        "type": "text",
+        "id": "hero_subtitle",
+        "label": "Hero subtitle",
+        "default": "Discover amazing products at great prices"
+      },
+      {
+        "type": "text",
+        "id": "hero_button_text",
+        "label": "Hero button text",
+        "default": "Shop Now"
+      },
+      {
+        "type": "url",
+        "id": "hero_button_url",
+        "label": "Hero button URL"
+      },
+      {
+        "type": "text",
+        "id": "hero_secondary_button_text",
+        "label": "Hero secondary button text",
+        "default": "Learn More"
+      },
+      {
+        "type": "url",
+        "id": "hero_secondary_button_url",
+        "label": "Hero secondary button URL"
+      },
+      {
+        "type": "image_picker",
+        "id": "hero_image",
+        "label": "Hero image"
+      },
+      {
+        "type": "header",
+        "content": "Featured Product"
+      },
+      {
+        "type": "text",
+        "id": "featured_product_title",
+        "label": "Featured product title",
+        "default": "Featured Product"
+      },
+      {
+        "type": "text",
+        "id": "featured_product_subtitle",
+        "label": "Featured product subtitle",
+        "default": "Check out our most popular item"
+      },
+      {
+        "type": "product",
+        "id": "featured_product",
+        "label": "Featured product"
+      },
+      {
+        "type": "header",
+        "content": "Features Section"
+      },
+      {
+        "type": "text",
+        "id": "features_title",
+        "label": "Features title",
+        "default": "Why Choose Us",
+        "info": "This title appears above the features grid section. Add features in the theme customizer to showcase your key benefits."
+      },
+      {
+        "type": "text",
+        "id": "features_subtitle",
+        "label": "Features subtitle",
+        "default": "We provide exceptional service and quality products",
+        "info": "This subtitle provides context for your features. Keep it concise and compelling."
+      },
+      {
+        "type": "header",
+        "content": "Testimonials Section"
+      },
+      {
+        "type": "text",
+        "id": "testimonials_title",
+        "label": "Testimonials title",
+        "default": "What Our Customers Say",
+        "info": "This title appears above the testimonials section. Add customer testimonials in the theme customizer to build trust and credibility."
+      },
+      {
+        "type": "text",
+        "id": "testimonials_subtitle",
+        "label": "Testimonials subtitle",
+        "default": "Don't just take our word for it",
+        "info": "This subtitle encourages visitors to read customer reviews. Make it engaging and trust-building."
+      },
+      {
+        "type": "header",
+        "content": "Social Media"
+      },
+      {
+        "type": "url",
+        "id": "social_facebook",
+        "label": "Facebook"
+      },
+      {
+        "type": "url",
+        "id": "social_twitter",
+        "label": "Twitter"
+      },
+      {
+        "type": "url",
+        "id": "social_instagram",
+        "label": "Instagram"
+      },
+      {
+        "type": "url",
+        "id": "social_youtube",
+        "label": "YouTube"
+      },
+      {
+        "type": "header",
+        "content": "Footer"
+      },
+      {
+        "type": "text",
+        "id": "footer_text",
+        "label": "Footer text",
+        "default": "Your trusted partner for quality products and exceptional service.",
+        "info": "Text displayed in the footer"
+      },
+      {
+        "type": "link_list",
+        "id": "footer_menu_1",
+        "label": "Footer menu 1",
+        "info": "Quick links menu"
+      },
+      {
+        "type": "link_list",
+        "id": "footer_menu_2",
+        "label": "Footer menu 2",
+        "info": "Customer service menu"
+      },
+      {
+        "type": "text",
+        "id": "newsletter_heading",
+        "label": "Newsletter heading",
+        "default": "Stay Updated"
+      },
+      {
+        "type": "textarea",
+        "id": "newsletter_text",
+        "label": "Newsletter text",
+        "default": "Subscribe to our newsletter for the latest updates and exclusive offers."
+      },
+      {
+        "type": "header",
+        "content": "Product"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_vendor",
+        "label": "Show vendor",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_sku",
+        "label": "Show SKU",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_tags",
+        "label": "Show tags",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Cart"
+      },
+      {
+        "type": "select",
+        "id": "cart_type",
+        "label": "Cart type",
+        "options": [
+          {
+            "value": "drawer",
+            "label": "Drawer"
+          },
+          {
+            "value": "page",
+            "label": "Page"
+          }
+        ],
+        "default": "page"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_cart_note",
+        "label": "Show cart note",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Search"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_search",
+        "label": "Show search",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "search_placeholder",
+        "label": "Search placeholder",
+        "default": "Search products..."
+      }
+    ]
+  }
+]

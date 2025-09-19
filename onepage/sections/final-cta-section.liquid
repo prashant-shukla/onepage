@@ -1,0 +1,356 @@
+{%- liquid
+  assign product = all_products[section.settings.product] | default: product
+  assign cta_title = section.settings.title | default: 'Ready to Get Started?'
+  assign cta_subtitle = section.settings.subtitle
+  assign cta_button_text = section.settings.button_text | default: 'Buy Now'
+  assign cta_price = product.price | money
+  assign urgency_text = section.settings.urgency_text
+  assign stock_count = section.settings.stock_count
+-%}
+
+<section class="final-cta-section color-{{ section.settings.color_scheme }} gradient">
+  <div class="final-cta-section__container">
+    <div class="final-cta-section__content">
+      <div class="final-cta-section__media">
+        {%- if section.settings.image != blank -%}
+          {%- liquid
+            assign image_alt = section.settings.image.alt | default: cta_title | escape
+            assign image_width = section.settings.image.width
+            assign image_height = section.settings.image.height
+            if section.settings.image_ratio == 'adapt'
+              assign image_height = image_width | divided_by: section.settings.image.aspect_ratio
+            endif
+          -%}
+          {{ section.settings.image | image_url: width: 600 | image_tag:
+            class: 'final-cta-section__image',
+            alt: image_alt,
+            width: image_width,
+            height: image_height,
+            loading: 'lazy',
+            sizes: '(max-width: 750px) 100vw, (max-width: 1200px) 50vw, 600px'
+          }}
+        {%- elsif product.featured_media != blank -%}
+          {%- liquid
+            assign image_alt = product.featured_media.alt | default: cta_title | escape
+            assign image_width = product.featured_media.width
+            assign image_height = product.featured_media.height
+            if section.settings.image_ratio == 'adapt'
+              assign image_height = image_width | divided_by: product.featured_media.aspect_ratio
+            endif
+          -%}
+          {{ product.featured_media | image_url: width: 600 | image_tag:
+            class: 'final-cta-section__image',
+            alt: image_alt,
+            width: image_width,
+            height: image_height,
+            loading: 'lazy',
+            sizes: '(max-width: 750px) 100vw, (max-width: 1200px) 50vw, 600px'
+          }}
+        {%- else -%}
+          <div class="final-cta-section__placeholder">
+            <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="200" height="200" fill="#f3f3f3"/>
+              <path d="M60 60H140V140H60V60Z" stroke="#ccc" stroke-width="2" fill="none"/>
+              <path d="M70 70H130V130H70V70Z" fill="#ddd"/>
+            </svg>
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="final-cta-section__text">
+        <h2 class="final-cta-section__title">{{ cta_title }}</h2>
+        
+        {%- if cta_subtitle != blank -%}
+          <p class="final-cta-section__subtitle">{{ cta_subtitle }}</p>
+        {%- endif -%}
+
+        <div class="final-cta-section__price">
+          <span class="price">{{ cta_price }}</span>
+          {%- if product.compare_at_price > product.price -%}
+            <span class="price price--compare">{{ product.compare_at_price | money }}</span>
+          {%- endif -%}
+        </div>
+
+        {%- if urgency_text != blank -%}
+          <div class="final-cta-section__urgency">
+            <span class="final-cta-section__urgency-text">{{ urgency_text }}</span>
+            {%- if stock_count != blank -%}
+              <span class="final-cta-section__stock">{{ stock_count }}</span>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        <div class="final-cta-section__actions">
+          <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" class="product-form" id="final-cta-form-{{ section.id }}">
+            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+            <button type="submit" name="add" class="final-cta-section__button button button--primary button--large">
+              <span>{{ cta_button_text }}</span>
+              <span class="button__price">{{ cta_price }}</span>
+            </button>
+          </form>
+
+          {%- if section.settings.guarantee_text != blank -%}
+            <p class="final-cta-section__guarantee">{{ section.settings.guarantee_text }}</p>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .final-cta-section {
+    padding: 6rem 0;
+    background: var(--color-base-background-2);
+  }
+
+  .final-cta-section__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .final-cta-section__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .final-cta-section__media {
+    position: relative;
+  }
+
+  .final-cta-section__image {
+    width: 100%;
+    height: auto;
+    border-radius: 1rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  .final-cta-section__placeholder {
+    width: 100%;
+    height: 400px;
+    background: #f8f9fa;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #ddd;
+  }
+
+  .final-cta-section__text {
+    padding: 2rem 0;
+  }
+
+  .final-cta-section__title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    color: var(--color-base-text);
+  }
+
+  .final-cta-section__subtitle {
+    font-size: 1.3rem;
+    color: #666;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+  }
+
+  .final-cta-section__price {
+    margin-bottom: 2rem;
+  }
+
+  .price {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--color-base-accent-1);
+  }
+
+  .price--compare {
+    font-size: 2rem;
+    color: #999;
+    text-decoration: line-through;
+    margin-left: 1rem;
+  }
+
+  .final-cta-section__urgency {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1rem 1.5rem;
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 0.5rem;
+  }
+
+  .final-cta-section__urgency-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #856404;
+  }
+
+  .final-cta-section__stock {
+    font-size: 1rem;
+    color: #e74c3c;
+    font-weight: 600;
+  }
+
+  .final-cta-section__actions {
+    margin-bottom: 2rem;
+  }
+
+  .final-cta-section__button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.8rem 2.5rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    background: var(--color-base-accent-1);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .final-cta-section__button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  }
+
+  .button__price {
+    font-size: 1.2rem;
+    opacity: 0.9;
+  }
+
+  .final-cta-section__guarantee {
+    font-size: 0.95rem;
+    color: #666;
+    margin: 1rem 0 0 0;
+    text-align: center;
+  }
+
+  @media (max-width: 768px) {
+    .final-cta-section__content {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .final-cta-section__title {
+      font-size: 2.5rem;
+    }
+
+    .final-cta-section__button {
+      padding: 1.5rem 2rem;
+      font-size: 1.2rem;
+    }
+
+    .price {
+      font-size: 2.5rem;
+    }
+
+    .price--compare {
+      font-size: 1.8rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Final CTA Section",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Select the product to display"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Leave blank to use product featured image"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Ready to Get Started?"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Join thousands of satisfied customers who have already made the switch."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Buy Now"
+    },
+    {
+      "type": "text",
+      "id": "urgency_text",
+      "label": "Urgency Text",
+      "default": "Limited Time Offer"
+    },
+    {
+      "type": "text",
+      "id": "stock_count",
+      "label": "Stock Count",
+      "default": "Only 12 left in stock!"
+    },
+    {
+      "type": "text",
+      "id": "guarantee_text",
+      "label": "Guarantee Text",
+      "default": "30-day money-back guarantee • Free shipping • Secure checkout"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "Adapt to image"
+        },
+        {
+          "value": "square",
+          "label": "Square"
+        },
+        {
+          "value": "portrait",
+          "label": "Portrait"
+        },
+        {
+          "value": "landscape",
+          "label": "Landscape"
+        }
+      ],
+      "default": "adapt",
+      "label": "Image ratio"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "background-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Final CTA Section"
+    }
+  ]
+}
+{% endschema %}

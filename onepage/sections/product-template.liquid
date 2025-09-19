@@ -1,0 +1,201 @@
+{%- liquid
+  assign product = all_products[section.settings.product] | default: product
+-%}
+
+<div class="product-template">
+  {%- if product != blank -%}
+    {%- comment -%} Hero Section {%- endcomment -%}
+    {% section 'hero-section' %}
+
+    {%- comment -%} USP/Benefits Section {%- endcomment -%}
+    {% section 'usp-section' %}
+
+    {%- comment -%} Product Features Section {%- endcomment -%}
+    {% section 'features-section' %}
+
+    {%- comment -%} Demo/Video Section {%- endcomment -%}
+    {% section 'video-section' %}
+
+    {%- comment -%} Social Proof Section {%- endcomment -%}
+    {% section 'testimonials-section' %}
+
+    {%- comment -%} Trust/Guarantee Section {%- endcomment -%}
+    {% section 'trust-section' %}
+
+    {%- comment -%} FAQ Section {%- endcomment -%}
+    {% section 'faq-section' %}
+
+    {%- comment -%} Final CTA Section {%- endcomment -%}
+    {% section 'final-cta-section' %}
+
+    {%- comment -%} Sticky Mobile Cart {%- endcomment -%}
+    {% section 'sticky-cart' %}
+  {%- else -%}
+    <div class="product-template__empty">
+      <div class="container">
+        <h1>No Product Selected</h1>
+        <p>To display the OnePage theme, you need to select a product in the theme settings.</p>
+        <div class="product-template__instructions">
+          <h2>How to Set Up Your OnePage Theme:</h2>
+          <ol>
+            <li>Go to <strong>Online Store > Themes</strong> in your Shopify admin</li>
+            <li>Click <strong>Customize</strong> on your OnePage theme</li>
+            <li>In the theme editor, look for <strong>Product Template</strong> section</li>
+            <li>Click on <strong>Product Template</strong> in the left sidebar</li>
+            <li>Select a product from the <strong>Product</strong> dropdown</li>
+            <li>Click <strong>Save</strong> to apply changes</li>
+          </ol>
+          <div class="product-template__actions">
+            <a href="/admin/themes" class="button button--primary">Go to Theme Settings</a>
+            <a href="/admin/products" class="button button--secondary">Add New Product</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+</div>
+
+<style>
+  .product-template__empty {
+    padding: 4rem 0;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    background: #f8f9fa;
+  }
+
+  .product-template__empty .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    text-align: center;
+  }
+
+  .product-template__empty h1 {
+    font-size: 3rem;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+  }
+
+  .product-template__empty p {
+    font-size: 1.3rem;
+    color: #6c757d;
+    margin-bottom: 3rem;
+  }
+
+  .product-template__instructions {
+    background: white;
+    padding: 3rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    text-align: left;
+    margin-bottom: 3rem;
+  }
+
+  .product-template__instructions h2 {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .product-template__instructions ol {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: #495057;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .product-template__instructions li {
+    margin-bottom: 1rem;
+  }
+
+  .product-template__instructions strong {
+    color: #007bff;
+  }
+
+  .product-template__actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    min-width: 180px;
+    text-align: center;
+  }
+
+  .button--primary {
+    background: #007bff;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0,123,255,0.3);
+  }
+
+  .button--primary:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,123,255,0.4);
+  }
+
+  .button--secondary {
+    background: transparent;
+    color: #007bff;
+    border: 2px solid #007bff;
+  }
+
+  .button--secondary:hover {
+    background: #007bff;
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    .product-template__empty h1 {
+      font-size: 2.5rem;
+    }
+
+    .product-template__instructions {
+      padding: 2rem;
+    }
+
+    .product-template__actions {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .button {
+      width: 100%;
+      max-width: 300px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Product Template",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Select the product to display on this page. This is required for the OnePage theme to work properly."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Template"
+    }
+  ]
+}
+{% endschema %}

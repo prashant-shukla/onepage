@@ -1,0 +1,2271 @@
+<div class="index-template">
+  {%- comment -%} Sortable Homepage Sections {%- endcomment -%}
+  {%- for block in section.blocks -%}
+    {%- case block.type -%}
+      {%- when 'hero_banner' -%}
+        <div class="hero-banner hero-banner--{{ block.settings.hero_banner_size | default: 'medium' }}" {{ block.shopify_attributes }}>
+          <div class="hero-banner__container">
+            <div class="hero-banner__content">
+              <h1 class="hero-banner__title">{{ block.settings.hero_title | default: 'Welcome to Our Store' }}</h1>
+              <p class="hero-banner__subtitle">{{ block.settings.hero_subtitle | default: 'Discover amazing products at great prices' }}</p>
+              <div class="hero-banner__actions">
+                <a href="{{ block.settings.hero_button_url | default: routes.all_products_collection_url }}" class="button button--primary button--large">
+                  {{ block.settings.hero_button_text | default: 'Shop Now' }}
+                </a>
+                <a href="{{ block.settings.hero_secondary_button_url | default: '/pages/about' }}" class="button button--secondary button--large">
+                  {{ block.settings.hero_secondary_button_text | default: 'Learn More' }}
+                </a>
+              </div>
+            </div>
+            <div class="hero-banner__media">
+              {%- if block.settings.hero_image != blank -%}
+                {{ block.settings.hero_image | image_url: width: 800 | image_tag: 
+                  alt: block.settings.hero_image.alt | default: block.settings.hero_title,
+                  class: 'hero-banner__img'
+                }}
+              {%- else -%}
+                <div class="hero-banner__placeholder">
+                  <svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="400" height="300" fill="currentColor" opacity="0.1"/>
+                    <path d="M100 50H300V250H100V50Z" stroke="currentColor" stroke-width="2" fill="none"/>
+                    <path d="M120 80H280V220H120V80Z" fill="currentColor" opacity="0.2"/>
+                  </svg>
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+
+      {%- when 'featured_product' -%}
+        <div class="featured-product-section" {{ block.shopify_attributes }}>
+          <div class="featured-product-section__container">
+            <div class="featured-product-section__header">
+              <h2 class="featured-product-section__title">{{ block.settings.featured_product_title | default: 'Featured Product' }}</h2>
+              <p class="featured-product-section__subtitle">{{ block.settings.featured_product_subtitle | default: 'Check out our most popular item' }}</p>
+            </div>
+            
+            {%- if block.settings.featured_product != blank -%}
+              <div class="featured-product-section__product">
+                <div class="featured-product-section__product-card">
+                  <div class="featured-product-section__product-image">
+                    {%- if block.settings.featured_product.featured_media -%}
+                      <a href="{{ block.settings.featured_product.url }}">
+                        {{ block.settings.featured_product.featured_media | image_url: width: 500 | image_tag: 
+                          alt: block.settings.featured_product.featured_media.alt | default: block.settings.featured_product.title,
+                          class: 'featured-product-section__image'
+                        }}
+                      </a>
+                    {%- else -%}
+                      <div class="featured-product-section__placeholder">
+                        <svg width="300" height="300" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect width="300" height="300" fill="currentColor" opacity="0.1"/>
+                          <path d="M75 75H225V225H75V75Z" stroke="currentColor" stroke-width="2" fill="none"/>
+                        </svg>
+                      </div>
+                    {%- endif -%}
+                  </div>
+
+                  <div class="featured-product-section__product-info">
+                    <h3 class="featured-product-section__product-title">
+                      <a href="{{ block.settings.featured_product.url }}">{{ block.settings.featured_product.title }}</a>
+                    </h3>
+                    
+                    <div class="featured-product-section__product-price">
+                      {%- if block.settings.featured_product.compare_at_price > block.settings.featured_product.price -%}
+                        <span class="price price--compare">{{ block.settings.featured_product.compare_at_price | money }}</span>
+                        <span class="price price--sale">{{ block.settings.featured_product.price | money }}</span>
+                      {%- else -%}
+                        <span class="price">{{ block.settings.featured_product.price | money }}</span>
+                      {%- endif -%}
+                    </div>
+
+                    <div class="featured-product-section__product-actions">
+                      <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" class="featured-product-section__add-to-cart">
+                        <input type="hidden" name="id" value="{{ block.settings.featured_product.selected_or_first_available_variant.id }}">
+                        <button type="submit" name="add" class="button button--primary">
+                          Buy Now
+                        </button>
+                      </form>
+                      <a href="{{ block.settings.featured_product.url }}" class="button button--secondary">
+                        View Details
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {%- else -%}
+              <div class="featured-product-section__no-product">
+                <h3>No Featured Product</h3>
+                <p>Please select a product in the theme editor to display it here.</p>
+                <div class="featured-product-section__instructions">
+                  <h4>How to add a featured product:</h4>
+                  <ol>
+                    <li>Go to Online Store > Themes</li>
+                    <li>Click Customize on your OnePage theme</li>
+                    <li>Find the "Theme" section in the left sidebar</li>
+                    <li>Scroll to "Featured Product" section</li>
+                    <li>Select a product from the "Featured product" dropdown</li>
+                    <li>Save your changes</li>
+                  </ol>
+                </div>
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+
+      {%- when 'video_section' -%}
+        <div class="video-section" {{ block.shopify_attributes }}>
+          <div class="video-section__container">
+            <div class="video-section__header">
+              <h2 class="video-section__title">{{ block.settings.video_title | default: 'Watch Our Story' }}</h2>
+              <p class="video-section__subtitle">{{ block.settings.video_subtitle | default: 'See what makes us different' }}</p>
+            </div>
+            
+            <div class="video-section__content">
+              <div class="video-section__video-container">
+                {%- if block.settings.video_url != blank -%}
+                  {%- if block.settings.video_url contains 'youtube.com' or block.settings.video_url contains 'youtu.be' -%}
+                  {%- assign video_id = block.settings.video_url | split: 'v=' | last | split: '&' | first -%}
+                  {%- if block.settings.video_url contains 'youtu.be' -%}
+                    {%- assign video_id = block.settings.video_url | split: 'youtu.be/' | last | split: '?' | first -%}
+                  {%- endif -%}
+                  {%- if video_id != blank -%}
+                    <iframe 
+                      class="video-section__video" 
+                      src="https://www.youtube.com/embed/{{ video_id }}?autoplay={{ block.settings.video_autoplay | default: false }}&mute={{ block.settings.video_mute | default: true }}&loop={{ block.settings.video_loop | default: true }}&controls={{ block.settings.video_controls | default: true }}&showinfo=0&rel=0"
+                      frameborder="0" 
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                      allowfullscreen>
+                    </iframe>
+                  {%- else -%}
+                    <div class="video-section__error">
+                      <p>Invalid YouTube URL. Please check the video URL format.</p>
+                    </div>
+                  {%- endif -%}
+                {%- elsif block.settings.video_url contains 'vimeo.com' -%}
+                  {%- assign video_id = block.settings.video_url | split: 'vimeo.com/' | last | split: '?' | first -%}
+                  {%- if video_id != blank -%}
+                    <iframe 
+                      class="video-section__video" 
+                      src="https://player.vimeo.com/video/{{ video_id }}?autoplay={{ block.settings.video_autoplay | default: false }}&muted={{ block.settings.video_mute | default: true }}&loop={{ block.settings.video_loop | default: true }}&controls={{ block.settings.video_controls | default: true }}&title=0&byline=0&portrait=0"
+                      frameborder="0" 
+                      allow="autoplay; fullscreen; picture-in-picture" 
+                      allowfullscreen>
+                    </iframe>
+                  {%- else -%}
+                    <div class="video-section__error">
+                      <p>Invalid Vimeo URL. Please check the video URL format.</p>
+                    </div>
+                  {%- endif -%}
+                {%- else -%}
+                  <div class="video-section__error">
+                    <p>Unsupported video platform. Please use YouTube or Vimeo.</p>
+                  </div>
+                  {%- endif -%}
+                {%- else -%}
+                  <div class="video-section__placeholder">
+                    <svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="400" height="300" fill="currentColor" opacity="0.1"/>
+                      <path d="M100 50H300V250H100V50Z" stroke="currentColor" stroke-width="2" fill="none"/>
+                      <path d="M120 80H280V220H120V80Z" fill="currentColor" opacity="0.2"/>
+                      <circle cx="200" cy="150" r="30" fill="currentColor" opacity="0.6"/>
+                      <path d="M185 150L200 165L215 150" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <p>Add a video URL in the theme customizer to display your video here.</p>
+                  </div>
+                {%- endif -%}
+              </div>
+            </div>
+          </div>
+        </div>
+
+      {%- when 'features_grid' -%}
+        <div class="features-grid" {{ block.shopify_attributes }}>
+          <div class="features-grid__container">
+            <div class="features-grid__header">
+              <h2 class="features-grid__title">{{ settings.features_title | default: 'Why Choose Us' }}</h2>
+              <p class="features-grid__subtitle">{{ settings.features_subtitle | default: 'We provide exceptional service and quality products' }}</p>
+              {%- assign feature_blocks = section.blocks | where: 'type', 'feature' -%}
+              {%- unless feature_blocks.size > 0 -%}
+              <div class="features-grid__help">
+                <p><strong>💡 How to customize:</strong> Go to Theme Customize > Theme Settings > Features Section to edit the title and subtitle. Add features by going to Theme Customize > Homepage > Features Grid section.</p>
+              </div>
+              {%- endunless -%}
+            </div>
+            
+            <div class="features-grid__grid">
+              {%- for feature_block in section.blocks -%}
+                {%- if feature_block.type == 'feature' -%}
+                  <div class="features-grid__item" {{ feature_block.shopify_attributes }}>
+                    <div class="features-grid__icon">
+                      {%- if feature_block.settings.icon != blank -%}
+                        {{ feature_block.settings.icon | image_url: width: 80 | image_tag: 
+                          alt: feature_block.settings.icon.alt | default: feature_block.settings.title,
+                          class: 'features-grid__icon-img'
+                        }}
+                      {%- else -%}
+                        <div class="features-grid__icon-placeholder">
+                          <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="30" cy="30" r="25" fill="currentColor" opacity="0.1"/>
+                            <path d="M30 15L35 25H45L37 32L40 42L30 35L20 42L23 32L15 25H25L30 15Z" fill="currentColor"/>
+                          </svg>
+                        </div>
+                      {%- endif -%}
+                    </div>
+                    <h3 class="features-grid__item-title">{{ feature_block.settings.title | default: 'Feature Title' }}</h3>
+                    <p class="features-grid__item-description">{{ feature_block.settings.description | default: 'Feature description goes here' }}</p>
+                  </div>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          </div>
+        </div>
+
+      {%- when 'testimonials' -%}
+        <div class="testimonials" {{ block.shopify_attributes }}>
+          <div class="testimonials__container">
+            <div class="testimonials__header">
+              <h2 class="testimonials__title">{{ section.settings.testimonials_title | default: 'What Our Customers Say' }}</h2>
+              <p class="testimonials__subtitle">{{ section.settings.testimonials_subtitle | default: "Don't just take our word for it" }}</p>
+              {%- assign testimonial_blocks = section.blocks | where: 'type', 'testimonial' -%}
+              {%- unless testimonial_blocks.size > 0 -%}
+              <div class="testimonials__help">
+                <p><strong>💡 How to customize:</strong> Go to Theme Customize > Theme Settings > Testimonials Section to edit the title and subtitle. Add customer testimonials by going to Theme Customize > Homepage > Testimonials section.</p>
+              </div>
+              {%- endunless -%}
+            </div>
+            
+            <div class="testimonials__grid">
+              {%- for testimonial_block in section.blocks -%}
+                {%- if testimonial_block.type == 'testimonial' -%}
+                  <div class="testimonials__item" {{ testimonial_block.shopify_attributes }}>
+                    <div class="testimonials__content">
+                      <div class="testimonials__quote">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M14.017 21V13.609C14.017 10.931 15.115 8.804 17.312 7.227C19.509 5.65 22.017 4.911 24.836 5.011V8.688C22.836 8.688 21.312 9.25 20.264 10.375C19.216 11.5 18.692 13.109 18.692 15.203V21H14.017ZM0 21V13.609C0 10.931 1.098 8.804 3.295 7.227C5.492 5.65 8 4.911 10.819 5.011V8.688C8.819 8.688 7.295 9.25 6.247 10.375C5.199 11.5 4.675 13.109 4.675 15.203V21H0Z" fill="currentColor" opacity="0.1"/>
+                        </svg>
+                      </div>
+                      <p class="testimonials__text">{{ testimonial_block.settings.text | default: 'This is an amazing product! I highly recommend it to everyone.' }}</p>
+                      <div class="testimonials__rating">
+                        {%- for i in (1..5) -%}
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z" fill="currentColor"/>
+                          </svg>
+                        {%- endfor -%}
+                      </div>
+                    </div>
+                    <div class="testimonials__author">
+                      {%- if testimonial_block.settings.avatar != blank -%}
+                        <div class="testimonials__avatar">
+                          {{ testimonial_block.settings.avatar | image_url: width: 60 | image_tag: 
+                            alt: testimonial_block.settings.name | default: 'Customer',
+                            class: 'testimonials__avatar-img'
+                          }}
+                        </div>
+                      {%- else -%}
+                        <div class="testimonials__avatar-placeholder">
+                          <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="30" cy="30" r="30" fill="currentColor" opacity="0.1"/>
+                            <path d="M30 15C35.5228 15 40 19.4772 40 25C40 30.5228 35.5228 35 30 35C24.4772 35 20 30.5228 20 25C20 19.4772 24.4772 15 30 15Z" fill="currentColor" opacity="0.6"/>
+                            <path d="M15 45C15 37.268 21.268 31 29 31H31C38.732 31 45 37.268 45 45V50H15V45Z" fill="currentColor" opacity="0.6"/>
+                          </svg>
+                        </div>
+                      {%- endif -%}
+                      <div class="testimonials__author-info">
+                        <h4 class="testimonials__name">{{ testimonial_block.settings.name | default: 'John Doe' }}</h4>
+                        <p class="testimonials__role">{{ testimonial_block.settings.role | default: 'Verified Customer' }}</p>
+                      </div>
+                    </div>
+                  </div>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          </div>
+        </div>
+
+      {%- when 'faq_section' -%}
+        <div class="faq-section" {{ block.shopify_attributes }}>
+          <div class="faq-section__container">
+            <div class="faq-section__header">
+              <h2 class="faq-section__title">{{ settings.faq_title | default: 'Frequently Asked Questions' }}</h2>
+              <p class="faq-section__subtitle">{{ settings.faq_subtitle | default: 'Find answers to common questions' }}</p>
+              {%- assign faq_blocks = section.blocks | where: 'type', 'faq' -%}
+              {%- unless faq_blocks.size > 0 -%}
+              <div class="faq-section__help">
+                <p><strong>💡 How to customize:</strong> Go to Theme Customize > Theme Settings > FAQ Section to edit the title and subtitle. Add FAQ items by going to Theme Customize > Homepage > FAQ Section.</p>
+              </div>
+              {%- endunless -%}
+            </div>
+            
+            <div class="faq-section__content">
+              {%- for faq_block in section.blocks -%}
+                {%- if faq_block.type == 'faq' -%}
+                  <div class="faq-item" {{ faq_block.shopify_attributes }}>
+                    <button class="faq-item__question" type="button">
+                      <span class="faq-item__question-text">{{ faq_block.settings.question | default: 'How can I track my order?' }}</span>
+                      <span class="faq-item__icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </span>
+                    </button>
+                    <div class="faq-item__answer">
+                      <div class="faq-item__answer-content">
+                        {{ faq_block.settings.answer | default: 'You can track your order by logging into your account and checking the order status, or by using the tracking number sent to your email.' }}
+                      </div>
+                    </div>
+                  </div>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          </div>
+        </div>
+
+      {%- when 'cta_section' -%}
+        <div class="cta-section" {{ block.shopify_attributes }}>
+          <div class="cta-section__container">
+            <div class="cta-section__content">
+              <h2 class="cta-section__title">{{ block.settings.cta_title | default: 'Ready to Get Started?' }}</h2>
+              <p class="cta-section__subtitle">{{ block.settings.cta_subtitle | default: 'Join thousands of satisfied customers and discover amazing products today.' }}</p>
+              <div class="cta-section__actions">
+                <a href="{{ block.settings.cta_button_url | default: routes.all_products_collection_url }}" class="button button--primary button--large">
+                  {{ block.settings.cta_button_text | default: 'Shop Now' }}
+                </a>
+                <a href="{{ block.settings.cta_secondary_button_url | default: '/pages/contact' }}" class="button button--secondary button--large">
+                  {{ block.settings.cta_secondary_button_text | default: 'Contact Us' }}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+    {%- endcase -%}
+  {%- endfor -%}
+
+</div>
+
+<style>
+  .hero-banner {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-banner.hero-banner--small {
+    padding: 3rem 0 !important;
+    min-height: 400px !important;
+  }
+
+  .hero-banner.hero-banner--medium {
+    padding: 6rem 0 !important;
+    min-height: 500px !important;
+  }
+
+  .hero-banner.hero-banner--large {
+    padding: 8rem 0 !important;
+    min-height: 600px !important;
+  }
+
+  .hero-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.05"><circle cx="30" cy="30" r="4"/></g></svg>') repeat;
+    animation: float 20s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+
+  .hero-banner__container {
+    max-width: {{ settings.page_width | default: 1200 }}px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-banner__content {
+    color: white;
+  }
+
+  .hero-banner__title {
+    font-size: 4.5rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  }
+
+  .hero-banner__subtitle {
+    font-size: 1.8rem;
+    margin-bottom: 3rem;
+    opacity: 0.9;
+    line-height: 1.6;
+  }
+
+  .hero-banner__actions {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .hero-banner__media {
+    position: relative;
+    max-width: 500px;
+    margin: 0 auto;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-banner__video-container {
+    position: relative;
+    width: 100%;
+    height: 350px;
+    border-radius: 2rem;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease;
+  }
+
+  .hero-banner__video-container:hover {
+    transform: scale(1.02);
+  }
+
+  .hero-banner__video {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 2rem;
+  }
+
+  .hero-banner__video-error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    text-align: center;
+    padding: 2rem;
+    border-radius: 2rem;
+  }
+
+  .hero-banner__video-error p {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  .hero-banner__img {
+    width: 100%;
+    height: 400px;
+    max-width: 500px;
+    object-fit: cover;
+    border-radius: 2rem;
+    box-shadow: 
+      0 25px 50px rgba(0,0,0,0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+    background: transparent;
+  }
+
+  .hero-banner__img::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+    border-radius: 2rem;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .hero-banner__img:hover {
+    transform: scale(1.05) translateY(-8px) rotateX(5deg);
+    box-shadow: 
+      0 35px 70px rgba(0,0,0,0.6),
+      0 0 0 1px rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+
+  .hero-banner__img:hover::before {
+    opacity: 0.8;
+  }
+
+  .hero-banner__placeholder {
+    width: 100%;
+    height: 400px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    color: white;
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  }
+
+  .featured-product-section {
+    padding: 6rem 0;
+    background: var(--color-background);
+    transition: background-color 0.3s ease;
+  }
+
+  .featured-product-section__container {
+    max-width: {{ settings.page_width | default: 1200 }}px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .featured-product-section__header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .featured-product-section__title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--color-heading);
+    margin-bottom: 1.5rem;
+    transition: color 0.3s ease;
+  }
+
+  .featured-product-section__subtitle {
+    font-size: 1.5rem;
+    color: var(--color-text);
+    max-width: 600px;
+    margin: 0 auto;
+    transition: color 0.3s ease;
+  }
+
+  .featured-product-section__product {
+    display: flex;
+    justify-content: center;
+  }
+
+  .featured-product-section__product-card {
+    background: var(--color-card-bg);
+    border-radius: 2rem;
+    box-shadow: 0 20px 40px var(--color-card-shadow);
+    overflow: hidden;
+    max-width: 800px;
+    width: 100%;
+    transition: all 0.3s ease;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--color-border);
+  }
+
+  .featured-product-section__product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 30px 60px var(--color-card-shadow);
+  }
+
+  .featured-product-section__product-image {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .featured-product-section__product-image a {
+    display: block;
+  }
+
+  .featured-product-section__image {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .featured-product-section__product-card:hover .featured-product-section__image {
+    transform: scale(1.05);
+  }
+
+  .featured-product-section__placeholder {
+    width: 100%;
+    height: 400px;
+    background: var(--color-card-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text);
+    transition: all 0.3s ease;
+  }
+
+  .featured-product-section__product-info {
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .featured-product-section__product-title {
+    margin: 0 0 1.5rem 0;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--color-heading);
+    transition: color 0.3s ease;
+  }
+
+  .featured-product-section__product-title a {
+    color: var(--color-heading);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .featured-product-section__product-title a:hover {
+    color: var(--color-link);
+  }
+
+  .featured-product-section__product-price {
+    margin-bottom: 2rem;
+  }
+
+  .price {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-heading);
+    transition: color 0.3s ease;
+  }
+
+  .price--compare {
+    text-decoration: line-through;
+    color: var(--color-muted);
+    margin-right: 1rem;
+    font-size: 2rem;
+  }
+
+  .price--sale {
+    color: var(--color-danger);
+  }
+
+  .featured-product-section__product-actions {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .featured-product-section__add-to-cart {
+    flex: 1;
+    min-width: 150px;
+  }
+
+  .featured-product-section__add-to-cart .button {
+    width: 100%;
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+    border: none;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+    position: relative;
+    overflow: hidden;
+    font-size: 1.5rem;
+    padding: 1.8rem 2.5rem;
+  }
+
+  .featured-product-section__add-to-cart .button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  .featured-product-section__add-to-cart .button:hover::before {
+    left: 100%;
+  }
+
+  .featured-product-section__add-to-cart .button:hover {
+    background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(231, 76, 60, 0.5);
+  }
+
+  .featured-product-section__add-to-cart .button:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+  }
+
+  .button {
+    display: inline-block;
+    padding: 1.2rem 2.4rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 0.8rem;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    min-width: 150px;
+  }
+
+  .button--primary {
+    background: linear-gradient(135deg, var(--color-button-primary) 0%, var(--color-button-primary-hover) 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0,123,255,0.3);
+  }
+
+  .button--primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,123,255,0.4);
+  }
+
+  .button--secondary {
+    background: var(--color-button-secondary);
+    color: var(--color-button-secondary-text);
+    border: 2px solid var(--color-button-secondary-border);
+  }
+
+  .button--secondary:hover {
+    background: var(--color-button-secondary-hover-bg);
+    color: var(--color-button-secondary-hover-text);
+    transform: translateY(-2px);
+  }
+
+  .button--large {
+    padding: 1.5rem 3rem;
+    font-size: 1.6rem;
+  }
+
+  /* Hero Banner Specific Button Styling */
+  .hero-banner .button--secondary {
+    background: #ffffff;
+    color: #2c3e50;
+    border: 3px solid #ffffff;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    font-weight: 700;
+    text-shadow: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .hero-banner .button--secondary:hover {
+    background: #f8f9fa;
+    border-color: #ffffff;
+    color: #2c3e50;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  }
+
+  .featured-product-section__no-product {
+    background: var(--color-card-bg);
+    padding: 4rem;
+    border-radius: 2rem;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+    border: 1px solid var(--color-border);
+    transition: all 0.3s ease;
+  }
+
+  .featured-product-section__no-product h3 {
+    font-size: 2rem;
+    color: var(--color-heading);
+    margin-bottom: 1rem;
+    transition: color 0.3s ease;
+  }
+
+  .featured-product-section__no-product p {
+    font-size: 1.2rem;
+    color: var(--color-text);
+    margin-bottom: 2rem;
+    transition: color 0.3s ease;
+  }
+
+  .featured-product-section__instructions {
+    background: var(--color-background);
+    padding: 2rem;
+    border-radius: 1rem;
+    text-align: left;
+    border: 1px solid var(--color-border);
+    transition: all 0.3s ease;
+  }
+
+  .featured-product-section__instructions h4 {
+    font-size: 1.3rem;
+    color: var(--color-heading);
+    margin-bottom: 1rem;
+    transition: color 0.3s ease;
+  }
+
+  .featured-product-section__instructions ol {
+    margin: 0;
+    padding-left: 1.5rem;
+  }
+
+  .featured-product-section__instructions li {
+    font-size: 1.1rem;
+    color: var(--color-text);
+    margin-bottom: 0.5rem;
+    transition: color 0.3s ease;
+  }
+
+  /* Video Section */
+  .video-section {
+    padding: 6rem 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .video-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 20% 80%, rgba(0, 123, 255, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(40, 167, 69, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .video-section__container {
+    max-width: {{ settings.page_width | default: 1200 }}px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .video-section__header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .video-section__title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--color-heading);
+    margin-bottom: 1.5rem;
+    transition: color 0.3s ease;
+  }
+
+  .video-section__subtitle {
+    font-size: 1.5rem;
+    color: var(--color-text);
+    max-width: 600px;
+    margin: 0 auto;
+    transition: color 0.3s ease;
+  }
+
+  .video-section__content {
+    display: flex;
+    justify-content: center;
+  }
+
+  .video-section__video-container {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    height: 450px;
+    border-radius: 2rem;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+  }
+
+  .video-section__video-container:hover {
+    transform: scale(1.02);
+  }
+
+  .video-section__video {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 2rem;
+  }
+
+  .video-section__error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-text);
+    text-align: center;
+    padding: 2rem;
+    border-radius: 2rem;
+  }
+
+  .video-section__error p {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  .video-section__placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background: var(--color-background);
+    color: var(--color-text);
+    text-align: center;
+    padding: 2rem;
+    border-radius: 2rem;
+    border: 2px dashed var(--color-border);
+  }
+
+  .video-section__placeholder svg {
+    margin-bottom: 1rem;
+    color: var(--color-text);
+  }
+
+  .video-section__placeholder p {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  /* Dark theme support for Video Section */
+  [data-theme="dark"] .video-section {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  }
+
+  [data-theme="dark"] .video-section__title {
+    color: #ffffff;
+  }
+
+  [data-theme="dark"] .video-section__subtitle {
+    color: #cccccc;
+  }
+
+  [data-theme="dark"] .video-section__placeholder {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+  }
+
+  [data-theme="dark"] .video-section__placeholder svg {
+    color: #ffffff;
+  }
+
+  @media (max-width: 768px) {
+    .video-section__video-container {
+      height: 250px;
+    }
+
+    .video-section__title {
+      font-size: 2.8rem;
+    }
+  }
+
+  .features-grid {
+    padding: 6rem 0;
+    background: var(--color-background);
+    transition: background-color 0.3s ease;
+  }
+
+  .features-grid__container {
+    max-width: {{ settings.page_width | default: 1200 }}px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .features-grid__header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .features-grid__title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--color-heading);
+    margin-bottom: 1.5rem;
+    transition: color 0.3s ease;
+  }
+
+  .features-grid__subtitle {
+    font-size: 1.5rem;
+    color: var(--color-text);
+    max-width: 600px;
+    margin: 0 auto;
+    transition: color 0.3s ease;
+  }
+
+  .features-grid__help {
+    background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+    border: 1px solid #e1bee7;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 2rem auto 0;
+    max-width: 800px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+
+  .features-grid__help p {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #2c3e50;
+    line-height: 1.5;
+  }
+
+  .features-grid__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+  }
+
+  .features-grid__item {
+    background: var(--color-card-bg);
+    padding: 3rem 2rem;
+    border-radius: 2rem;
+    text-align: center;
+    box-shadow: 0 10px 30px var(--color-card-shadow);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+  }
+
+  .features-grid__item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, var(--color-button-primary) 0%, var(--color-button-primary-hover) 100%);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+
+  .features-grid__item:hover::before {
+    transform: scaleX(1);
+  }
+
+  .features-grid__item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px var(--color-card-shadow);
+  }
+
+  .features-grid__icon {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .features-grid__icon-img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+  }
+
+  .features-grid__icon-placeholder {
+    width: 80px;
+    height: 80px;
+    color: var(--color-button-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease;
+  }
+
+  .features-grid__item-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-heading);
+    margin-bottom: 1.5rem;
+    transition: color 0.3s ease;
+  }
+
+  .features-grid__item-description {
+    font-size: 1.3rem;
+    color: var(--color-text);
+    line-height: 1.6;
+    margin: 0;
+    transition: color 0.3s ease;
+  }
+
+  .testimonials {
+    padding: 6rem 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .testimonials::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.03"><circle cx="50" cy="50" r="2"/></g></svg>') repeat;
+  }
+
+  .testimonials__container {
+    max-width: {{ settings.page_width | default: 1200 }}px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .testimonials__header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .testimonials__title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    transition: color 0.3s ease;
+  }
+
+  .testimonials__subtitle {
+    font-size: 1.5rem;
+    color: rgba(255,255,255,0.9);
+    max-width: 600px;
+    margin: 0 auto;
+    transition: color 0.3s ease;
+  }
+
+  .testimonials__help {
+    background: rgba(255,255,255,0.95);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 2rem auto 0;
+    max-width: 800px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    backdrop-filter: blur(10px);
+  }
+
+  .testimonials__help p {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #2c3e50;
+    line-height: 1.5;
+  }
+
+  /* Dark theme support for testimonials title and subtitle */
+  [data-theme="dark"] .testimonials__title {
+    color: #ffffff;
+  }
+
+  [data-theme="dark"] .testimonials__subtitle {
+    color: rgba(255,255,255,0.9);
+  }
+
+  .testimonials__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 3rem;
+  }
+
+  .testimonials__item {
+    background: rgba(255,255,255,0.95);
+    padding: 3rem;
+    border-radius: 2rem;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+
+  .testimonials__item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+  }
+
+  .testimonials__content {
+    margin-bottom: 2rem;
+  }
+
+  .testimonials__quote {
+    margin-bottom: 1.5rem;
+  }
+
+  .testimonials__quote svg {
+    color: var(--color-button-primary);
+    transition: color 0.3s ease;
+  }
+
+  .testimonials__text {
+    font-size: 1.4rem;
+    line-height: 1.7;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+    transition: color 0.3s ease;
+  }
+
+  [data-theme="dark"] .testimonials__text {
+    color: #ffffff;
+  }
+
+  .testimonials__rating {
+    display: flex;
+    gap: 0.3rem;
+  }
+
+  .testimonials__rating svg {
+    color: var(--color-warning);
+    transition: color 0.3s ease;
+  }
+
+  .testimonials__author {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .testimonials__avatar {
+    flex-shrink: 0;
+  }
+
+  .testimonials__avatar-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .testimonials__avatar-placeholder {
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+    color: var(--color-text);
+    transition: color 0.3s ease;
+  }
+
+  .testimonials__author-info {
+    flex: 1;
+  }
+
+  .testimonials__name {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0 0 0.5rem 0;
+    transition: color 0.3s ease;
+  }
+
+  [data-theme="dark"] .testimonials__name {
+    color: #ffffff;
+  }
+
+  .testimonials__role {
+    font-size: 1.2rem;
+    color: #666;
+    margin: 0;
+    transition: color 0.3s ease;
+  }
+
+  [data-theme="dark"] .testimonials__role {
+    color: #cccccc;
+  }
+
+  /* Dark theme support for testimonials cards */
+  [data-theme="dark"] .testimonials__item {
+    background: rgba(30, 30, 30, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  [data-theme="dark"] .testimonials__item:hover {
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  [data-theme="dark"] .testimonials__quote svg {
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  [data-theme="dark"] .testimonials__rating svg {
+    color: #ffc107;
+  }
+
+  /* FAQ Section */
+  .faq-section {
+    padding: 6rem 0;
+    background: var(--color-background);
+    transition: background-color 0.3s ease;
+  }
+
+  .faq-section__container {
+    max-width: {{ settings.page_width | default: 1200 }}px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .faq-section__header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .faq-section__title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--color-heading);
+    margin-bottom: 1.5rem;
+    transition: color 0.3s ease;
+  }
+
+  .faq-section__subtitle {
+    font-size: 1.5rem;
+    color: var(--color-text);
+    max-width: 600px;
+    margin: 0 auto;
+    transition: color 0.3s ease;
+  }
+
+  .faq-section__help {
+    background: linear-gradient(135deg, #fff3e0 0%, #fce4ec 100%);
+    border: 1px solid #ffccbc;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 2rem auto 0;
+    max-width: 800px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+
+  .faq-section__help p {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #2c3e50;
+    line-height: 1.5;
+  }
+
+  .faq-section__content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .faq-item {
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    background: var(--color-card-bg);
+  }
+
+  .faq-item:hover {
+    box-shadow: 0 4px 15px var(--color-card-shadow);
+  }
+
+  .faq-item__question {
+    width: 100%;
+    padding: 2rem;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+
+  .faq-item__question:hover {
+    background: var(--color-background);
+  }
+
+  .faq-item__question-text {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--color-heading);
+    transition: color 0.3s ease;
+  }
+
+  .faq-item__icon {
+    color: var(--color-text);
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  .faq-item.active .faq-item__icon {
+    transform: rotate(180deg);
+  }
+
+  .faq-item__answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  .faq-item.active .faq-item__answer {
+    max-height: 200px;
+  }
+
+  .faq-item__answer-content {
+    padding: 0 2rem 2rem 2rem;
+    font-size: 1.4rem;
+    line-height: 1.6;
+    color: var(--color-text);
+    transition: color 0.3s ease;
+  }
+
+  /* Dark theme support for FAQ */
+  [data-theme="dark"] .faq-item {
+    background: var(--color-card-bg);
+    border-color: var(--color-border);
+  }
+
+  [data-theme="dark"] .faq-item__question:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  /* Dark theme support for help text */
+  [data-theme="dark"] .features-grid__help {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    border-color: #4a5f7a;
+  }
+
+  [data-theme="dark"] .features-grid__help p {
+    color: #ffffff;
+  }
+
+  [data-theme="dark"] .testimonials__help {
+    background: rgba(0, 0, 0, 0.8);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  [data-theme="dark"] .testimonials__help p {
+    color: #ffffff;
+  }
+
+  [data-theme="dark"] .faq-section__help {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    border-color: #4a5f7a;
+  }
+
+  [data-theme="dark"] .faq-section__help p {
+    color: #ffffff;
+  }
+
+  .cta-section {
+    padding: 6rem 0;
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    text-align: center;
+  }
+
+  .cta-section__container {
+    max-width: {{ settings.page_width | default: 1200 }}px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .cta-section__title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  }
+
+  .cta-section__subtitle {
+    font-size: 1.5rem;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 3rem;
+    line-height: 1.6;
+  }
+
+  .cta-section__actions {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 768px) {
+    .hero-banner--small {
+      padding: 2rem 0;
+      min-height: 300px !important;
+    }
+
+    .hero-banner--medium {
+      padding: 3rem 0;
+      min-height: 400px !important;
+    }
+
+    .hero-banner--large {
+      padding: 4rem 0;
+      min-height: 500px !important;
+    }
+
+    .hero-banner__container {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      text-align: center;
+    }
+
+    .hero-banner__title {
+      font-size: 3rem;
+    }
+
+    .hero-banner__subtitle {
+      font-size: 1.5rem;
+    }
+
+    .hero-banner__actions {
+      justify-content: center;
+    }
+
+    .hero-banner__video-container {
+      height: 250px;
+    }
+
+    .hero-banner__img {
+      height: 250px;
+    }
+
+    .featured-product-section__product-card {
+      grid-template-columns: 1fr;
+    }
+
+    .featured-product-section__product-info {
+      padding: 2rem;
+    }
+
+    .featured-product-section__product-actions {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .button {
+      width: 100%;
+      max-width: 250px;
+    }
+
+    .cta-section__actions {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .cta-section__title {
+      font-size: 2.8rem;
+    }
+
+    .features-grid__grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .features-grid__title {
+      font-size: 2.8rem;
+    }
+
+    .testimonials__grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .testimonials__title {
+      font-size: 2.8rem;
+    }
+
+    .testimonials__item {
+      padding: 2rem;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Quick buy functionality
+    const quickBuyForms = document.querySelectorAll('.featured-product-section__add-to-cart');
+    
+    quickBuyForms.forEach(function(form) {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const button = form.querySelector('button[type="submit"]');
+        const originalText = button.textContent;
+        
+        // Show loading state
+        button.textContent = 'Adding...';
+        button.disabled = true;
+        
+        // Get form data
+        const formData = new FormData(form);
+        
+        // Submit to cart
+        fetch(form.action, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        })
+        .then(response => {
+          if (response.ok) {
+            return response.text();
+          }
+          throw new Error('Network response was not ok');
+        })
+        .then(data => {
+          // Success feedback
+          button.textContent = 'Added!';
+          button.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+          
+          // Update cart count if element exists
+          const cartCount = document.querySelector('.cart-count-bubble span');
+          if (cartCount) {
+            const currentCount = parseInt(cartCount.textContent) || 0;
+            cartCount.textContent = currentCount + 1;
+          }
+          
+          // Show success message and redirect to checkout
+          const successMessage = document.createElement('div');
+          successMessage.textContent = 'Product added to cart! Redirecting to checkout...';
+          successMessage.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            z-index: 10000;
+            font-weight: 600;
+          `;
+          document.body.appendChild(successMessage);
+          
+          // Redirect to checkout after 1.5 seconds
+          setTimeout(function() {
+            window.location.href = '/checkout';
+          }, 1500);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          button.textContent = 'Error - Try Again';
+          button.style.background = 'linear-gradient(135deg, #dc3545 0%, #c82333 100%)';
+          
+          // Show error message
+          const errorMessage = document.createElement('div');
+          errorMessage.textContent = 'Failed to add product. Please try again.';
+          errorMessage.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #dc3545;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+            z-index: 10000;
+            font-weight: 600;
+          `;
+          document.body.appendChild(errorMessage);
+          
+          setTimeout(() => {
+            document.body.removeChild(errorMessage);
+          }, 3000);
+          
+          setTimeout(function() {
+            button.textContent = originalText;
+            button.disabled = false;
+            button.style.background = 'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)';
+          }, 3000);
+        });
+      });
+    });
+
+    // FAQ functionality
+    const faqItems = document.querySelectorAll('.faq-item__question');
+    
+    faqItems.forEach(function(question) {
+      question.addEventListener('click', function() {
+        const faqItem = this.closest('.faq-item');
+        const isActive = faqItem.classList.contains('active');
+        
+        // Close all other FAQ items
+        document.querySelectorAll('.faq-item').forEach(function(item) {
+          item.classList.remove('active');
+        });
+        
+        // Toggle current item
+        if (!isActive) {
+          faqItem.classList.add('active');
+        }
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Homepage",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero Section"
+    },
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Hero Title",
+      "default": "Welcome to Our Store"
+    },
+    {
+      "type": "select",
+      "id": "hero_banner_size",
+      "label": "Hero Banner Size",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "text",
+      "id": "hero_subtitle",
+      "label": "Hero Subtitle",
+      "default": "Discover amazing products at great prices"
+    },
+    {
+      "type": "text",
+      "id": "hero_button_text",
+      "label": "Primary Button Text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "hero_button_url",
+      "label": "Primary Button URL"
+    },
+    {
+      "type": "text",
+      "id": "hero_secondary_button_text",
+      "label": "Secondary Button Text",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "hero_secondary_button_url",
+      "label": "Secondary Button URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero Image",
+      "info": "Leave blank if using video"
+    },
+    {
+      "type": "header",
+      "content": "Video Section"
+    },
+    {
+      "type": "text",
+      "id": "video_title",
+      "label": "Video Title",
+      "default": "Watch Our Story"
+    },
+    {
+      "type": "text",
+      "id": "video_subtitle",
+      "label": "Video Subtitle",
+      "default": "See what makes us different"
+    },
+    {
+      "type": "url",
+      "id": "video_url",
+      "label": "Video URL",
+      "info": "YouTube or Vimeo URL (e.g., https://www.youtube.com/watch?v=VIDEO_ID or https://vimeo.com/VIDEO_ID)"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_autoplay",
+      "label": "Autoplay Video",
+      "default": false,
+      "info": "Note: Videos with sound will be muted by default for better user experience"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_mute",
+      "label": "Mute Video",
+      "default": true,
+      "info": "Recommended for autoplay videos"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_loop",
+      "label": "Loop Video",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "video_controls",
+      "label": "Show Video Controls",
+      "default": true,
+      "info": "Show play/pause and other video controls"
+    },
+    {
+      "type": "header",
+      "content": "Featured Product"
+    },
+    {
+      "type": "product",
+      "id": "featured_product",
+      "label": "Featured Product"
+    },
+    {
+      "type": "text",
+      "id": "featured_product_title",
+      "label": "Featured Product Title",
+      "default": "Featured Product"
+    },
+    {
+      "type": "text",
+      "id": "featured_product_subtitle",
+      "label": "Featured Product Subtitle",
+      "default": "Check out our most popular item"
+    },
+    {
+      "type": "header",
+      "content": "FAQ Section"
+    },
+    {
+      "type": "text",
+      "id": "faq_title",
+      "label": "FAQ Title",
+      "default": "Frequently Asked Questions",
+      "info": "This title appears above the FAQ section. Add FAQ items in the theme customizer to answer common customer questions."
+    },
+    {
+      "type": "text",
+      "id": "faq_subtitle",
+      "label": "FAQ Subtitle",
+      "default": "Find answers to common questions",
+      "info": "This subtitle helps visitors understand what they'll find in the FAQ section. Keep it clear and helpful."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "hero_banner",
+      "name": "Hero Banner",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "hero_title",
+          "label": "Hero Title",
+          "default": "Welcome to Our Store"
+        },
+        {
+          "type": "text",
+          "id": "hero_subtitle",
+          "label": "Hero Subtitle",
+          "default": "Discover amazing products at great prices"
+        },
+        {
+          "type": "text",
+          "id": "hero_button_text",
+          "label": "Primary Button Text",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "hero_button_url",
+          "label": "Primary Button URL"
+        },
+        {
+          "type": "text",
+          "id": "hero_secondary_button_text",
+          "label": "Secondary Button Text",
+          "default": "Learn More"
+        },
+        {
+          "type": "url",
+          "id": "hero_secondary_button_url",
+          "label": "Secondary Button URL"
+        },
+        {
+          "type": "image_picker",
+          "id": "hero_image",
+          "label": "Hero Image"
+        },
+        {
+          "type": "select",
+          "id": "hero_banner_size",
+          "label": "Hero Banner Size",
+          "options": [
+            {
+              "value": "small",
+              "label": "Small"
+            },
+            {
+              "value": "medium",
+              "label": "Medium"
+            },
+            {
+              "value": "large",
+              "label": "Large"
+            }
+          ],
+          "default": "medium"
+        }
+      ]
+    },
+    {
+      "type": "featured_product",
+      "name": "Featured Product",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "product",
+          "id": "featured_product",
+          "label": "Featured Product"
+        },
+        {
+          "type": "text",
+          "id": "featured_product_title",
+          "label": "Featured Product Title",
+          "default": "Featured Product"
+        },
+        {
+          "type": "text",
+          "id": "featured_product_subtitle",
+          "label": "Featured Product Subtitle",
+          "default": "Check out our most popular item"
+        }
+      ]
+    },
+    {
+      "type": "video_section",
+      "name": "Video Section",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "video_title",
+          "label": "Video Title",
+          "default": "Watch Our Story"
+        },
+        {
+          "type": "text",
+          "id": "video_subtitle",
+          "label": "Video Subtitle",
+          "default": "See what makes us different"
+        },
+        {
+          "type": "url",
+          "id": "video_url",
+          "label": "Video URL",
+          "info": "YouTube or Vimeo URL (e.g., https://www.youtube.com/watch?v=VIDEO_ID or https://vimeo.com/VIDEO_ID)"
+        },
+        {
+          "type": "checkbox",
+          "id": "video_autoplay",
+          "label": "Autoplay Video",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "video_mute",
+          "label": "Mute Video",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "video_loop",
+          "label": "Loop Video",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "video_controls",
+          "label": "Show Video Controls",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "features_grid",
+      "name": "Features Grid",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "testimonials",
+      "name": "Testimonials",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "faq_section",
+      "name": "FAQ Section",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "cta_section",
+      "name": "Call to Action",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "cta_title",
+          "label": "CTA Title",
+          "default": "Ready to Get Started?"
+        },
+        {
+          "type": "text",
+          "id": "cta_subtitle",
+          "label": "CTA Subtitle",
+          "default": "Join thousands of satisfied customers and discover amazing products today."
+        },
+        {
+          "type": "text",
+          "id": "cta_button_text",
+          "label": "Primary Button Text",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "cta_button_url",
+          "label": "Primary Button URL"
+        },
+        {
+          "type": "text",
+          "id": "cta_secondary_button_text",
+          "label": "Secondary Button Text",
+          "default": "Contact Us"
+        },
+        {
+          "type": "url",
+          "id": "cta_secondary_button_url",
+          "label": "Secondary Button URL"
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Feature Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Feature description goes here"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        }
+      ]
+    },
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Testimonial Text",
+          "default": "This is an amazing product! I highly recommend it to everyone."
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Customer Name",
+          "default": "John Doe"
+        },
+        {
+          "type": "text",
+          "id": "role",
+          "label": "Customer Role",
+          "default": "Verified Customer"
+        },
+        {
+          "type": "image_picker",
+          "id": "avatar",
+          "label": "Customer Avatar"
+        }
+      ]
+    },
+    {
+      "type": "faq",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "How can I track my order?"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "Answer",
+          "default": "You can track your order by logging into your account and checking the order status, or by using the tracking number sent to your email."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Homepage",
+      "blocks": [
+        {
+          "type": "hero_banner",
+          "settings": {
+            "hero_title": "Welcome to Our Store",
+            "hero_subtitle": "Discover amazing products at great prices",
+            "hero_button_text": "Shop Now",
+            "hero_secondary_button_text": "Learn More",
+            "hero_banner_size": "medium"
+          }
+        },
+        {
+          "type": "featured_product",
+          "settings": {
+            "featured_product_title": "Featured Product",
+            "featured_product_subtitle": "Check out our most popular item"
+          }
+        },
+        {
+          "type": "video_section",
+          "settings": {
+            "video_title": "Watch Our Story",
+            "video_subtitle": "See what makes us different",
+            "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "video_autoplay": false,
+            "video_mute": true,
+            "video_loop": true,
+            "video_controls": true
+          }
+        },
+        {
+          "type": "features_grid"
+        },
+        {
+          "type": "testimonials"
+        },
+        {
+          "type": "faq_section"
+        },
+        {
+          "type": "cta_section",
+          "settings": {
+            "cta_title": "Ready to Get Started?",
+            "cta_subtitle": "Join thousands of satisfied customers and discover amazing products today.",
+            "cta_button_text": "Shop Now",
+            "cta_secondary_button_text": "Contact Us"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Free Shipping",
+            "description": "Free shipping on orders over $50"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "24/7 Support",
+            "description": "Round-the-clock customer support"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Money Back",
+            "description": "30-day money back guarantee"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "text": "Amazing quality and fast shipping! I will definitely order again.",
+            "name": "Sarah Johnson",
+            "role": "Verified Customer"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "text": "Great customer service and the product exceeded my expectations.",
+            "name": "Mike Chen",
+            "role": "Happy Customer"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "text": "Best purchase I've made this year. Highly recommended!",
+            "name": "Emily Davis",
+            "role": "Loyal Customer"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How can I track my order?",
+            "answer": "You can track your order by logging into your account and checking the order status, or by using the tracking number sent to your email."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What is your return policy?",
+            "answer": "We offer a 30-day return policy for all items. Items must be in original condition with tags attached. Contact our support team to initiate a return."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Do you offer international shipping?",
+            "answer": "Yes, we ship worldwide! Shipping costs and delivery times vary by location. Check our shipping page for detailed information about your country."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

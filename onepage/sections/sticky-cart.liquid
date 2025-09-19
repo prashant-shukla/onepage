@@ -1,0 +1,241 @@
+{%- liquid
+  assign product = all_products[section.settings.product] | default: product
+  assign sticky_price = product.price | money
+  assign sticky_button_text = section.settings.button_text | default: 'Buy Now'
+-%}
+
+<div class="sticky-cart" id="sticky-cart-{{ section.id }}">
+  <div class="sticky-cart__container">
+    <div class="sticky-cart__content">
+      <div class="sticky-cart__product">
+        {%- if product.featured_media != blank -%}
+          <div class="sticky-cart__image">
+            {{ product.featured_media | image_url: width: 60 | image_tag: alt: product.title }}
+          </div>
+        {%- endif -%}
+        <div class="sticky-cart__details">
+          <h3 class="sticky-cart__title">{{ product.title }}</h3>
+          <div class="sticky-cart__price">{{ sticky_price }}</div>
+        </div>
+      </div>
+      
+      <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" class="sticky-cart__form">
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        <button type="submit" name="add" class="sticky-cart__button button button--primary">
+          {{ sticky_button_text }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  .sticky-cart {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid #e5e5e5;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    display: none;
+  }
+
+  .sticky-cart.sticky-cart--visible {
+    transform: translateY(0);
+    display: block;
+  }
+
+  .sticky-cart__container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+  }
+
+  .sticky-cart__content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .sticky-cart__product {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+  }
+
+  .sticky-cart__image {
+    width: 60px;
+    height: 60px;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .sticky-cart__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .sticky-cart__details {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .sticky-cart__title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem 0;
+    color: var(--color-base-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sticky-cart__price {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-base-accent-1);
+  }
+
+  .sticky-cart__form {
+    flex-shrink: 0;
+  }
+
+  .sticky-cart__button {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    background: var(--color-base-accent-1);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .sticky-cart__button:hover {
+    background: var(--color-base-accent-1);
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  @media (min-width: 769px) {
+    .sticky-cart {
+      display: none !important;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .sticky-cart__container {
+      padding: 0.8rem 1rem;
+    }
+
+    .sticky-cart__content {
+      gap: 0.8rem;
+    }
+
+    .sticky-cart__image {
+      width: 50px;
+      height: 50px;
+    }
+
+    .sticky-cart__title {
+      font-size: 0.9rem;
+    }
+
+    .sticky-cart__price {
+      font-size: 1rem;
+    }
+
+    .sticky-cart__button {
+      padding: 0.8rem 1.5rem;
+      font-size: 0.9rem;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const stickyCart = document.getElementById('sticky-cart-{{ section.id }}');
+    if (!stickyCart) return;
+
+    let isVisible = false;
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    function updateStickyCart() {
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      
+      // Show sticky cart when scrolled down 300px and not at the bottom
+      const shouldShow = scrollY > 300 && scrollY < documentHeight - windowHeight - 100;
+      
+      if (shouldShow && !isVisible) {
+        stickyCart.classList.add('sticky-cart--visible');
+        isVisible = true;
+      } else if (!shouldShow && isVisible) {
+        stickyCart.classList.remove('sticky-cart--visible');
+        isVisible = false;
+      }
+      
+      lastScrollY = scrollY;
+      ticking = false;
+    }
+
+    function requestTick() {
+      if (!ticking) {
+        requestAnimationFrame(updateStickyCart);
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', requestTick, { passive: true });
+    
+    // Hide sticky cart when user reaches the bottom
+    window.addEventListener('scroll', function() {
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      
+      if (scrollY + windowHeight >= documentHeight - 50) {
+        stickyCart.classList.remove('sticky-cart--visible');
+        isVisible = false;
+      }
+    }, { passive: true });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Sticky Cart",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Select the product to display"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Buy Now"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sticky Cart"
+    }
+  ]
+}
+{% endschema %}

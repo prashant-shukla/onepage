@@ -1,0 +1,374 @@
+<div class="search-template">
+  <div class="search-template__container">
+    <div class="search-template__header">
+      <h1 class="search-template__title">Search Results</h1>
+      <p class="search-template__subtitle">
+        {%- if search.performed -%}
+          {%- if search.results_count > 0 -%}
+            Found {{ search.results_count }} result{% if search.results_count != 1 %}s{% endif %} for "{{ search.terms | escape }}"
+          {%- else -%}
+            No results found for "{{ search.terms | escape }}"
+          {%- endif -%}
+        {%- else -%}
+          Search for products, collections, and more
+        {%- endif -%}
+      </p>
+    </div>
+
+    <div class="search-template__form">
+      <form action="{{ routes.search_url }}" method="get" class="search-form">
+        <div class="search-form__field">
+          <input 
+            type="search" 
+            name="q" 
+            value="{{ search.terms | escape }}" 
+            placeholder="Search products..."
+            class="search-form__input"
+            autocomplete="off"
+          >
+          <button type="submit" class="search-form__button">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19 19L13 13M15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 1 8 1C11.866 1 15 4.13401 15 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    {%- if search.performed -%}
+      {%- if search.results_count > 0 -%}
+        <div class="search-template__results">
+          <div class="search-template__grid">
+            {%- for item in search.results -%}
+              <div class="search-template__item">
+                {%- if item.object_type == 'product' -%}
+                  <div class="search-template__item-image">
+                    {%- if item.featured_media -%}
+                      <a href="{{ item.url }}">
+                        {{ item.featured_media | image_url: width: 300 | image_tag: 
+                          alt: item.featured_media.alt | default: item.title,
+                          class: 'search-template__image'
+                        }}
+                      </a>
+                    {%- else -%}
+                      <div class="search-template__placeholder">
+                        <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect width="200" height="200" fill="#f3f3f3"/>
+                        </svg>
+                      </div>
+                    {%- endif -%}
+                  </div>
+
+                  <div class="search-template__item-content">
+                    <h3 class="search-template__item-title">
+                      <a href="{{ item.url }}">{{ item.title }}</a>
+                    </h3>
+                    
+                    <div class="search-template__item-price">
+                      <span class="price">{{ item.price | money }}</span>
+                      {%- if item.compare_at_price > item.price -%}
+                        <span class="price price--compare">{{ item.compare_at_price | money }}</span>
+                      {%- endif -%}
+                    </div>
+
+                    <div class="search-template__item-type">
+                      <span class="search-template__badge search-template__badge--product">Product</span>
+                    </div>
+                  </div>
+
+                {%- elsif item.object_type == 'collection' -%}
+                  <div class="search-template__item-image">
+                    {%- if item.featured_image -%}
+                      <a href="{{ item.url }}">
+                        {{ item.featured_image | image_url: width: 300 | image_tag: 
+                          alt: item.featured_image.alt | default: item.title,
+                          class: 'search-template__image'
+                        }}
+                      </a>
+                    {%- else -%}
+                      <div class="search-template__placeholder">
+                        <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect width="200" height="200" fill="#f3f3f3"/>
+                        </svg>
+                      </div>
+                    {%- endif -%}
+                  </div>
+
+                  <div class="search-template__item-content">
+                    <h3 class="search-template__item-title">
+                      <a href="{{ item.url }}">{{ item.title }}</a>
+                    </h3>
+                    
+                    <div class="search-template__item-description">
+                      {{ item.description | truncate: 100 }}
+                    </div>
+
+                    <div class="search-template__item-type">
+                      <span class="search-template__badge search-template__badge--collection">Collection</span>
+                    </div>
+                  </div>
+
+                {%- elsif item.object_type == 'page' -%}
+                  <div class="search-template__item-image">
+                    <div class="search-template__placeholder">
+                      <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="200" height="200" fill="#f3f3f3"/>
+                        <path d="M50 50H150V150H50V50Z" stroke="#ccc" stroke-width="2" fill="none"/>
+                      </svg>
+                    </div>
+                  </div>
+
+                  <div class="search-template__item-content">
+                    <h3 class="search-template__item-title">
+                      <a href="{{ item.url }}">{{ item.title }}</a>
+                    </h3>
+                    
+                    <div class="search-template__item-description">
+                      {{ item.content | strip_html | truncate: 100 }}
+                    </div>
+
+                    <div class="search-template__item-type">
+                      <span class="search-template__badge search-template__badge--page">Page</span>
+                    </div>
+                  </div>
+                {%- endif -%}
+              </div>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- else -%}
+        <div class="search-template__empty">
+          <h2>No results found</h2>
+          <p>Try searching with different keywords or browse our products.</p>
+          <a href="{{ routes.all_products_collection_url }}" class="button button--primary">
+            Browse All Products
+          </a>
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</div>
+
+<style>
+  .search-template {
+    padding: 2rem 0;
+    min-height: 60vh;
+  }
+
+  .search-template__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .search-template__header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .search-template__title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+  }
+
+  .search-template__subtitle {
+    font-size: 1.2rem;
+    color: #6c757d;
+  }
+
+  .search-template__form {
+    margin-bottom: 3rem;
+  }
+
+  .search-form__field {
+    display: flex;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .search-form__input {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    border: 2px solid #e5e5e5;
+    border-radius: 0.5rem 0 0 0.5rem;
+    font-size: 1.4rem;
+  }
+
+  .search-form__input:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+
+  .search-form__button {
+    padding: 1rem 1.5rem;
+    background: #007bff;
+    color: white;
+    border: 2px solid #007bff;
+    border-radius: 0 0.5rem 0.5rem 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .search-form__button:hover {
+    background: #0056b3;
+    border-color: #0056b3;
+  }
+
+  .search-template__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .search-template__item {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .search-template__item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  }
+
+  .search-template__item-image {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .search-template__item-image a {
+    display: block;
+  }
+
+  .search-template__image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .search-template__item:hover .search-template__image {
+    transform: scale(1.05);
+  }
+
+  .search-template__placeholder {
+    width: 100%;
+    height: 200px;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .search-template__item-content {
+    padding: 1.5rem;
+  }
+
+  .search-template__item-title {
+    margin: 0 0 1rem 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+
+  .search-template__item-title a {
+    color: #2c3e50;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .search-template__item-title a:hover {
+    color: #007bff;
+  }
+
+  .search-template__item-price {
+    margin-bottom: 1rem;
+  }
+
+  .price {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #2c3e50;
+  }
+
+  .price--compare {
+    text-decoration: line-through;
+    color: #6c757d;
+    margin-right: 0.5rem;
+  }
+
+  .search-template__item-description {
+    font-size: 1.2rem;
+    color: #6c757d;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+
+  .search-template__item-type {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .search-template__badge {
+    padding: 0.3rem 0.8rem;
+    border-radius: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .search-template__badge--product {
+    background: #d4edda;
+    color: #155724;
+  }
+
+  .search-template__badge--collection {
+    background: #d1ecf1;
+    color: #0c5460;
+  }
+
+  .search-template__badge--page {
+    background: #f8d7da;
+    color: #721c24;
+  }
+
+  .search-template__empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #f8f9fa;
+    border-radius: 1rem;
+  }
+
+  .search-template__empty h2 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+  }
+
+  .search-template__empty p {
+    font-size: 1.3rem;
+    color: #6c757d;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .search-template__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .search-template__title {
+      font-size: 2.5rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Search Template",
+  "tag": "section",
+  "class": "section",
+  "settings": []
+}
+{% endschema %}

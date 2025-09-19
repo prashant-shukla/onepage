@@ -1,0 +1,227 @@
+<div class="register-template">
+  <div class="register-template__container">
+    <div class="register-template__content">
+      <div class="register-template__header">
+        <h1 class="register-template__title">Create Account</h1>
+        <p class="register-template__subtitle">Join us today! Create your account to get started.</p>
+      </div>
+
+      <div class="register-template__form-container">
+        {%- form 'create_customer', class: 'register-template__form' -%}
+          {%- if form.errors -%}
+            <div class="register-template__errors">
+              <h2 class="register-template__error-title">Please correct the following errors:</h2>
+              <ul class="register-template__error-list">
+                {%- for field in form.errors -%}
+                  <li class="register-template__error-item">
+                    {{ form.errors[field] }}
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          {%- endif -%}
+
+          <div class="register-template__field">
+            <label for="FirstName" class="register-template__label">First Name</label>
+            <input 
+              type="text" 
+              id="FirstName" 
+              name="customer[first_name]" 
+              class="register-template__input"
+              autocomplete="given-name"
+              required
+            >
+          </div>
+
+          <div class="register-template__field">
+            <label for="LastName" class="register-template__label">Last Name</label>
+            <input 
+              type="text" 
+              id="LastName" 
+              name="customer[last_name]" 
+              class="register-template__input"
+              autocomplete="family-name"
+              required
+            >
+          </div>
+
+          <div class="register-template__field">
+            <label for="CustomerEmail" class="register-template__label">Email</label>
+            <input 
+              type="email" 
+              id="CustomerEmail" 
+              name="customer[email]" 
+              class="register-template__input"
+              autocomplete="email"
+              required
+            >
+          </div>
+
+          <div class="register-template__field">
+            <label for="CustomerPassword" class="register-template__label">Password</label>
+            <input 
+              type="password" 
+              id="CustomerPassword" 
+              name="customer[password]" 
+              class="register-template__input"
+              autocomplete="new-password"
+              required
+            >
+          </div>
+
+          <div class="register-template__actions">
+            <button type="submit" class="button button--primary button--large">
+              Create Account
+            </button>
+          </div>
+
+          <div class="register-template__links">
+            <a href="{{ routes.account_login_url }}" class="register-template__link">
+              Already have an account? Sign in
+            </a>
+          </div>
+        {%- endform -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .register-template {
+    padding: 4rem 0;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  }
+
+  .register-template__container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .register-template__content {
+    background: white;
+    padding: 3rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  }
+
+  .register-template__header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .register-template__title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+  }
+
+  .register-template__subtitle {
+    font-size: 1.2rem;
+    color: #6c757d;
+  }
+
+  .register-template__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .register-template__errors {
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .register-template__error-title {
+    font-size: 1.2rem;
+    color: #721c24;
+    margin-bottom: 0.5rem;
+  }
+
+  .register-template__error-list {
+    margin: 0;
+    padding-left: 1.5rem;
+  }
+
+  .register-template__error-item {
+    color: #721c24;
+    font-size: 1.1rem;
+  }
+
+  .register-template__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .register-template__label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2c3e50;
+  }
+
+  .register-template__input {
+    padding: 1rem 1.2rem;
+    border: 2px solid #e5e5e5;
+    border-radius: 0.5rem;
+    font-size: 1.2rem;
+    transition: border-color 0.3s ease;
+  }
+
+  .register-template__input:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+
+  .register-template__actions {
+    margin-top: 1rem;
+  }
+
+  .button--large {
+    width: 100%;
+    padding: 1.2rem 2rem;
+    font-size: 1.3rem;
+  }
+
+  .register-template__links {
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+
+  .register-template__link {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+  }
+
+  .register-template__link:hover {
+    color: #0056b3;
+  }
+
+  @media (max-width: 768px) {
+    .register-template__content {
+      padding: 2rem;
+    }
+
+    .register-template__title {
+      font-size: 2rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Register Template",
+  "tag": "section",
+  "class": "section",
+  "settings": []
+}
+{% endschema %}

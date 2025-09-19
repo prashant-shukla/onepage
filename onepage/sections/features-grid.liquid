@@ -1,0 +1,223 @@
+<div class="features-grid">
+  <div class="features-grid__container">
+    <div class="features-grid__header">
+      <h2 class="features-grid__title">{{ section.settings.title | default: 'Why Choose Us' }}</h2>
+      <p class="features-grid__subtitle">{{ section.settings.subtitle | default: 'We provide exceptional service and quality products' }}</p>
+    </div>
+    
+    <div class="features-grid__grid">
+      {%- for block in section.blocks -%}
+        <div class="features-grid__item" {{ block.shopify_attributes }}>
+          <div class="features-grid__icon">
+            {%- if block.settings.icon != blank -%}
+              {{ block.settings.icon | image_url: width: 80 | image_tag: 
+                alt: block.settings.icon.alt | default: block.settings.title,
+                class: 'features-grid__icon-img'
+              }}
+            {%- else -%}
+              <div class="features-grid__icon-placeholder">
+                <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="30" cy="30" r="25" fill="currentColor" opacity="0.1"/>
+                  <path d="M30 15L35 25H45L37 32L40 42L30 35L20 42L23 32L15 25H25L30 15Z" fill="currentColor"/>
+                </svg>
+              </div>
+            {%- endif -%}
+          </div>
+          <h3 class="features-grid__item-title">{{ block.settings.title | default: 'Feature Title' }}</h3>
+          <p class="features-grid__item-description">{{ block.settings.description | default: 'Feature description goes here' }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .features-grid {
+    padding: 6rem 0;
+    background: #f8f9fa;
+  }
+
+  .features-grid__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .features-grid__header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .features-grid__title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+  }
+
+  .features-grid__subtitle {
+    font-size: 1.5rem;
+    color: #6c757d;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .features-grid__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+  }
+
+  .features-grid__item {
+    background: white;
+    padding: 3rem 2rem;
+    border-radius: 2rem;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .features-grid__item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+
+  .features-grid__item:hover::before {
+    transform: scaleX(1);
+  }
+
+  .features-grid__item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  }
+
+  .features-grid__icon {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .features-grid__icon-img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+  }
+
+  .features-grid__icon-placeholder {
+    width: 80px;
+    height: 80px;
+    color: #007bff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .features-grid__item-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+  }
+
+  .features-grid__item-description {
+    font-size: 1.3rem;
+    color: #6c757d;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .features-grid__grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .features-grid__title {
+      font-size: 2.8rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Features Grid",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Why Choose Us"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "We provide exceptional service and quality products"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Feature Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Feature description goes here"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Features Grid",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Free Shipping",
+            "description": "Free shipping on orders over $50"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "24/7 Support",
+            "description": "Round-the-clock customer support"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Money Back",
+            "description": "30-day money back guarantee"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,283 @@
+<div class="testimonials">
+  <div class="testimonials__container">
+    <div class="testimonials__header">
+      <h2 class="testimonials__title">{{ section.settings.title | default: 'What Our Customers Say' }}</h2>
+      <p class="testimonials__subtitle">{{ section.settings.subtitle | default: "Don't just take our word for it" }}</p>
+    </div>
+    
+    <div class="testimonials__grid">
+      {%- for block in section.blocks -%}
+        <div class="testimonials__item" {{ block.shopify_attributes }}>
+          <div class="testimonials__content">
+            <div class="testimonials__quote">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14.017 21V13.609C14.017 10.931 15.115 8.804 17.312 7.227C19.509 5.65 22.017 4.911 24.836 5.011V8.688C22.836 8.688 21.312 9.25 20.264 10.375C19.216 11.5 18.692 13.109 18.692 15.203V21H14.017ZM0 21V13.609C0 10.931 1.098 8.804 3.295 7.227C5.492 5.65 8 4.911 10.819 5.011V8.688C8.819 8.688 7.295 9.25 6.247 10.375C5.199 11.5 4.675 13.109 4.675 15.203V21H0Z" fill="currentColor" opacity="0.1"/>
+              </svg>
+            </div>
+            <p class="testimonials__text">{{ block.settings.text | default: 'This is an amazing product! I highly recommend it to everyone.' }}</p>
+            <div class="testimonials__rating">
+              {%- for i in (1..5) -%}
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z" fill="#ffc107"/>
+                </svg>
+              {%- endfor -%}
+            </div>
+          </div>
+          <div class="testimonials__author">
+            {%- if block.settings.avatar != blank -%}
+              <div class="testimonials__avatar">
+                {{ block.settings.avatar | image_url: width: 60 | image_tag: 
+                  alt: block.settings.name | default: 'Customer',
+                  class: 'testimonials__avatar-img'
+                }}
+              </div>
+            {%- else -%}
+              <div class="testimonials__avatar-placeholder">
+                <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="30" cy="30" r="30" fill="#e9ecef"/>
+                  <path d="M30 15C35.5228 15 40 19.4772 40 25C40 30.5228 35.5228 35 30 35C24.4772 35 20 30.5228 20 25C20 19.4772 24.4772 15 30 15Z" fill="#6c757d"/>
+                  <path d="M15 45C15 37.268 21.268 31 29 31H31C38.732 31 45 37.268 45 45V50H15V45Z" fill="#6c757d"/>
+                </svg>
+              </div>
+            {%- endif -%}
+            <div class="testimonials__author-info">
+              <h4 class="testimonials__name">{{ block.settings.name | default: 'John Doe' }}</h4>
+              <p class="testimonials__role">{{ block.settings.role | default: 'Verified Customer' }}</p>
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .testimonials {
+    padding: 6rem 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .testimonials::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.03"><circle cx="50" cy="50" r="2"/></g></svg>') repeat;
+  }
+
+  .testimonials__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .testimonials__header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .testimonials__title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  }
+
+  .testimonials__subtitle {
+    font-size: 1.5rem;
+    color: rgba(255,255,255,0.9);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .testimonials__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 3rem;
+  }
+
+  .testimonials__item {
+    background: rgba(255,255,255,0.95);
+    padding: 3rem;
+    border-radius: 2rem;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+
+  .testimonials__item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+  }
+
+  .testimonials__content {
+    margin-bottom: 2rem;
+  }
+
+  .testimonials__quote {
+    margin-bottom: 1.5rem;
+  }
+
+  .testimonials__quote svg {
+    color: #007bff;
+  }
+
+  .testimonials__text {
+    font-size: 1.4rem;
+    line-height: 1.7;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+  }
+
+  .testimonials__rating {
+    display: flex;
+    gap: 0.3rem;
+  }
+
+  .testimonials__author {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .testimonials__avatar {
+    flex-shrink: 0;
+  }
+
+  .testimonials__avatar-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .testimonials__avatar-placeholder {
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+  }
+
+  .testimonials__author-info {
+    flex: 1;
+  }
+
+  .testimonials__name {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .testimonials__role {
+    font-size: 1.2rem;
+    color: #6c757d;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .testimonials__grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .testimonials__title {
+      font-size: 2.8rem;
+    }
+
+    .testimonials__item {
+      padding: 2rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "What Our Customers Say"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Don't just take our word for it"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Testimonial Text",
+          "default": "This is an amazing product! I highly recommend it to everyone."
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Customer Name",
+          "default": "John Doe"
+        },
+        {
+          "type": "text",
+          "id": "role",
+          "label": "Customer Role",
+          "default": "Verified Customer"
+        },
+        {
+          "type": "image_picker",
+          "id": "avatar",
+          "label": "Customer Avatar"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        {
+          "type": "testimonial",
+          "settings": {
+            "text": "Amazing quality and fast shipping! I will definitely order again.",
+            "name": "Sarah Johnson",
+            "role": "Verified Customer"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "text": "Great customer service and the product exceeded my expectations.",
+            "name": "Mike Chen",
+            "role": "Happy Customer"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "text": "Best purchase I've made this year. Highly recommended!",
+            "name": "Emily Davis",
+            "role": "Loyal Customer"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

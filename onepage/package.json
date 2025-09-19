@@ -1,0 +1,36 @@
+{
+  "name": "onepage-shopify-theme",
+  "version": "1.0.0",
+  "description": "A Shopify theme built to sell one product brilliantly",
+  "main": "index.js",
+  "scripts": {
+    "dev": "shopify theme dev",
+    "build": "shopify theme build",
+    "deploy": "shopify theme push",
+    "lint": "eslint assets/*.js",
+    "format": "prettier --write assets/*.js"
+  },
+  "keywords": [
+    "shopify",
+    "theme",
+    "onepage",
+    "ecommerce",
+    "single-product"
+  ],
+  "author": "Pacific Softwares",
+  "license": "MIT",
+  "devDependencies": {
+    "@shopify/cli": "^3.0.0",
+    "@shopify/theme": "^3.0.0",
+    "eslint": "^8.0.0",
+    "prettier": "^2.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/shopify-themes.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/shopify-themes/issues"
+  },
+  "homepage": "https://github.com/your-org/shopify-themes#readme"
+}

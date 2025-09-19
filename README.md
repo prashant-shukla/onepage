@@ -1,4 +1,4 @@
-# 🛍️ OnePage – Free & Open Source Shopify Theme  
+# 🛍️ OnePage Express – Free & Open Source Shopify Theme  
 
 **A Shopify theme built to sell one product brilliantly.**  
 

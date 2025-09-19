@@ -1,0 +1,46 @@
+{
+  "current": {
+    "favicon": null,
+    "colors_text": "#121212",
+    "colors_background_1": "#ffffff",
+    "colors_background_2": "#f3f3f3",
+    "colors_accent_1": "#121212",
+    "colors_accent_2": "#ecf1f4",
+    "type_header_font": "assistant_n4",
+    "heading_scale": 100,
+    "type_body_font": "assistant_n4",
+    "body_scale": 100,
+    "page_width": 1200,
+    "spacing_sections": 0,
+    "buttons_radius": 0,
+    "features_title": "Why Choose Us",
+    "features_subtitle": "We provide exceptional service and quality products",
+    "testimonials_title": "What Our Customers Say",
+    "testimonials_subtitle": "Don't just take our word for it",
+    "faq_title": "Frequently Asked Questions",
+    "faq_subtitle": "Find answers to common questions"
+  },
+  "presets": {
+    "Default": {
+      "favicon": null,
+      "colors_text": "#121212",
+      "colors_background_1": "#ffffff",
+      "colors_background_2": "#f3f3f3",
+      "colors_accent_1": "#121212",
+      "colors_accent_2": "#ecf1f4",
+      "type_header_font": "assistant_n4",
+      "heading_scale": 100,
+      "type_body_font": "assistant_n4",
+      "body_scale": 100,
+      "page_width": 1200,
+      "spacing_sections": 0,
+      "buttons_radius": 0,
+      "features_title": "Why Choose Us",
+      "features_subtitle": "We provide exceptional service and quality products",
+      "testimonials_title": "What Our Customers Say",
+      "testimonials_subtitle": "Don't just take our word for it",
+      "faq_title": "Frequently Asked Questions",
+      "faq_subtitle": "Find answers to common questions"
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "general": {
+    "meta": {
+      "tags": "Tagged \"{{ tags }}\"",
+      "page": "Page {{ page }}"
+    },
+    "search": {
+      "search": "Search"
+    },
+    "accessibility": {
+      "skip_to_text": "Skip to content",
+      "refresh_page": "Choosing a selection results in a full page refresh.",
+      "link_messages": {
+        "new_window": "Opens in a new window."
+      },
+      "loading": "Loading...",
+      "share_success": "Link copied to clipboard"
+    }
+  },
+  "accessibility": {
+    "loading": "Loading..."
+  },
+  "sections": {
+    "header": {
+      "cart_count": {
+        "one": "{{ count }} item",
+        "other": "{{ count }} items"
+      }
+    },
+    "footer": {
+      "contact": "Contact",
+      "email": "Email",
+      "phone": "Phone",
+      "link_list": "Quick Links",
+      "newsletter_heading": "Newsletter",
+      "newsletter_text": "Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.",
+      "payment": "Payment methods"
+    },
+    "cart": {
+      "cart_error": "There was an error while updating your cart. Please try again.",
+      "cart_quantity_error_html": "You can only add {{ quantity }} of this item to your cart."
+    }
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to cart",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable",
+      "value_unavailable": "{{ option_value }} - Unavailable",
+      "media": {
+        "image_available": "Image {{ index }} of {{ count }}"
+      }
+    }
+  },
+  "newsletter": {
+    "label": "Email",
+    "button_label": "Subscribe",
+    "success": "Thanks for subscribing"
+  },
+  "customer": {
+    "account_fallback": "Account",
+    "log_in": "Log in"
+  },
+  "templates": {
+    "cart": {
+      "cart": "Cart"
+    }
+  },
+  "gift_cards": {
+    "issued": {
+      "title": "Here's your gift card!",
+      "print_gift_card": "Print gift card",
+      "expires": "Expires on {{ expiry }}"
+    }
+  }
+}

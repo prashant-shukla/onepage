@@ -1,0 +1,251 @@
+<div class="collection-template">
+  <div class="collection-template__container">
+    <div class="collection-template__header">
+      <h1 class="collection-template__title">{{ collection.title }}</h1>
+      {%- if collection.description != blank -%}
+        <div class="collection-template__description">
+          {{ collection.description }}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if collection.products.size > 0 -%}
+      <div class="collection-template__products">
+        <div class="collection-template__grid">
+          {%- for product in collection.products -%}
+            <div class="collection-template__product">
+              <div class="collection-template__product-image">
+                {%- if product.featured_media -%}
+                  <a href="{{ product.url }}">
+                    {{ product.featured_media | image_url: width: 400 | image_tag: 
+                      alt: product.featured_media.alt | default: product.title,
+                      loading: 'lazy',
+                      class: 'collection-template__image'
+                    }}
+                  </a>
+                {%- else -%}
+                  <div class="collection-template__placeholder">
+                    <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="200" height="200" fill="#f3f3f3"/>
+                      <path d="M50 50H150V150H50V50Z" stroke="#ccc" stroke-width="2" fill="none"/>
+                      <path d="M60 60H140V140H60V60Z" fill="#ddd"/>
+                    </svg>
+                  </div>
+                {%- endif -%}
+              </div>
+
+              <div class="collection-template__product-info">
+                <h3 class="collection-template__product-title">
+                  <a href="{{ product.url }}">{{ product.title }}</a>
+                </h3>
+                
+                <div class="collection-template__product-price">
+                  {%- if product.compare_at_price > product.price -%}
+                    <span class="price price--compare">{{ product.compare_at_price | money }}</span>
+                    <span class="price price--sale">{{ product.price | money }}</span>
+                  {%- else -%}
+                    <span class="price">{{ product.price | money }}</span>
+                  {%- endif -%}
+                </div>
+
+                <div class="collection-template__product-actions">
+                  <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                    <button type="submit" name="add" class="button button--primary button--small">
+                      Add to Cart
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- else -%}
+      <div class="collection-template__empty">
+        <h2>No products found</h2>
+        <p>This collection is empty. Check back later for new products!</p>
+        <a href="{{ routes.all_products_collection_url }}" class="button button--primary">
+          View All Products
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<style>
+  .collection-template {
+    padding: 2rem 0;
+    min-height: 60vh;
+  }
+
+  .collection-template__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .collection-template__header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .collection-template__title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+  }
+
+  .collection-template__description {
+    font-size: 1.2rem;
+    color: #6c757d;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .collection-template__products {
+    margin-bottom: 3rem;
+  }
+
+  .collection-template__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+
+  .collection-template__product {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .collection-template__product:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  }
+
+  .collection-template__product-image {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .collection-template__product-image a {
+    display: block;
+  }
+
+  .collection-template__image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .collection-template__product:hover .collection-template__image {
+    transform: scale(1.05);
+  }
+
+  .collection-template__placeholder {
+    width: 100%;
+    height: 250px;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .collection-template__product-info {
+    padding: 1.5rem;
+  }
+
+  .collection-template__product-title {
+    margin: 0 0 1rem 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+
+  .collection-template__product-title a {
+    color: #2c3e50;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .collection-template__product-title a:hover {
+    color: #007bff;
+  }
+
+  .collection-template__product-price {
+    margin-bottom: 1.5rem;
+  }
+
+  .price {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #2c3e50;
+  }
+
+  .price--compare {
+    text-decoration: line-through;
+    color: #6c757d;
+    margin-right: 0.5rem;
+  }
+
+  .price--sale {
+    color: #dc3545;
+  }
+
+  .collection-template__product-actions {
+    display: flex;
+    justify-content: center;
+  }
+
+  .button--small {
+    padding: 0.8rem 1.5rem;
+    font-size: 1.1rem;
+  }
+
+  .collection-template__empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #f8f9fa;
+    border-radius: 1rem;
+  }
+
+  .collection-template__empty h2 {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+  }
+
+  .collection-template__empty p {
+    font-size: 1.2rem;
+    color: #6c757d;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .collection-template__grid {
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .collection-template__title {
+      font-size: 2.5rem;
+    }
+
+    .collection-template__product-info {
+      padding: 1rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Collection Template",
+  "tag": "section",
+  "class": "section",
+  "settings": []
+}
+{% endschema %}

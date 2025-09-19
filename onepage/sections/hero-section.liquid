@@ -1,0 +1,310 @@
+{%- liquid
+  assign product = all_products[section.settings.product] | default: product
+  assign hero_image = section.settings.hero_image | default: product.featured_media
+  assign hero_video = section.settings.hero_video
+  assign hero_title = section.settings.hero_title | default: product.title
+  assign hero_subtitle = section.settings.hero_subtitle
+  assign hero_price = product.price | money
+  assign hero_button_text = section.settings.hero_button_text | default: 'Buy Now'
+-%}
+
+<section class="hero-section color-{{ section.settings.color_scheme }} gradient">
+  <div class="hero-section__container">
+    <div class="hero-section__content">
+      <div class="hero-section__media">
+        {%- if hero_video != blank -%}
+          <div class="hero-section__video-wrapper">
+            {%- if hero_video.type == 'youtube' -%}
+              <iframe
+                src="https://www.youtube.com/embed/{{ hero_video.id }}?autoplay=1&mute=1&loop=1&playlist={{ hero_video.id }}"
+                class="hero-section__video"
+                frameborder="0"
+                allow="autoplay; encrypted-media"
+                allowfullscreen
+                loading="lazy"
+              ></iframe>
+            {%- elsif hero_video.type == 'vimeo' -%}
+              <iframe
+                src="https://player.vimeo.com/video/{{ hero_video.id }}?autoplay=1&mute=1&loop=1"
+                class="hero-section__video"
+                frameborder="0"
+                allow="autoplay; encrypted-media"
+                allowfullscreen
+                loading="lazy"
+              ></iframe>
+            {%- endif -%}
+          </div>
+        {%- elsif hero_image != blank -%}
+          <div class="hero-section__image-wrapper">
+            {%- liquid
+              assign image_alt = hero_image.alt | default: hero_title | escape
+              assign image_width = hero_image.width
+              assign image_height = hero_image.height
+              if section.settings.image_ratio == 'adapt'
+                assign image_height = image_width | divided_by: hero_image.aspect_ratio
+              endif
+            -%}
+            {{ hero_image | image_url: width: 1200 | image_tag:
+              class: 'hero-section__image',
+              alt: image_alt,
+              width: image_width,
+              height: image_height,
+              loading: 'eager',
+              sizes: '(max-width: 750px) 100vw, (max-width: 1200px) 50vw, 600px'
+            }}
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="hero-section__text">
+        {%- if hero_subtitle != blank -%}
+          <p class="hero-section__subtitle">{{ hero_subtitle }}</p>
+        {%- endif -%}
+        
+        <h1 class="hero-section__title">{{ hero_title }}</h1>
+        
+        <div class="hero-section__price">
+          <span class="price">{{ hero_price }}</span>
+          {%- if product.compare_at_price > product.price -%}
+            <span class="price price--compare">{{ product.compare_at_price | money }}</span>
+          {%- endif -%}
+        </div>
+
+        <div class="hero-section__description">
+          {{ section.settings.hero_description | default: product.description | truncate: 200 }}
+        </div>
+
+        <div class="hero-section__actions">
+          <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" class="product-form" id="product-form-{{ section.id }}">
+            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+            <button type="submit" name="add" class="hero-section__button button button--primary button--full-width">
+              <span>{{ hero_button_text }}</span>
+              <span class="button__price">{{ hero_price }}</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-section {
+    padding: 4rem 0;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+  }
+
+  .hero-section__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .hero-section__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .hero-section__media {
+    position: relative;
+  }
+
+  .hero-section__video-wrapper {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  }
+
+  .hero-section__video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 1rem;
+  }
+
+  .hero-section__image {
+    width: 100%;
+    height: auto;
+    border-radius: 1rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  .hero-section__text {
+    padding: 2rem 0;
+  }
+
+  .hero-section__subtitle {
+    font-size: 1.2rem;
+    color: var(--color-base-accent-1);
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .hero-section__title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    color: var(--color-base-text);
+  }
+
+  .hero-section__price {
+    margin-bottom: 2rem;
+  }
+
+  .price {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-base-accent-1);
+  }
+
+  .price--compare {
+    font-size: 1.8rem;
+    color: #999;
+    text-decoration: line-through;
+    margin-left: 1rem;
+  }
+
+  .hero-section__description {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #666;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-section__button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 2rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    background: var(--color-base-accent-1);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+
+  .hero-section__button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  }
+
+  .button__price {
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
+
+  @media (max-width: 768px) {
+    .hero-section__content {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .hero-section__title {
+      font-size: 2.5rem;
+    }
+
+    .hero-section__button {
+      padding: 1.2rem 1.5rem;
+      font-size: 1.1rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Hero Section",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Select the product to display"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero Image",
+      "info": "Leave blank to use product featured image"
+    },
+    {
+      "type": "video",
+      "id": "hero_video",
+      "label": "Hero Video",
+      "info": "YouTube or Vimeo video URL"
+    },
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Hero Title",
+      "info": "Leave blank to use product title"
+    },
+    {
+      "type": "text",
+      "id": "hero_subtitle",
+      "label": "Hero Subtitle",
+      "placeholder": "Revolutionary Smartwatch"
+    },
+    {
+      "type": "richtext",
+      "id": "hero_description",
+      "label": "Hero Description",
+      "info": "Leave blank to use product description"
+    },
+    {
+      "type": "text",
+      "id": "hero_button_text",
+      "label": "Button Text",
+      "default": "Buy Now"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "Adapt to image"
+        },
+        {
+          "value": "square",
+          "label": "Square"
+        },
+        {
+          "value": "portrait",
+          "label": "Portrait"
+        },
+        {
+          "value": "landscape",
+          "label": "Landscape"
+        }
+      ],
+      "default": "adapt",
+      "label": "Image ratio"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "background-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Section"
+    }
+  ]
+}
+{% endschema %}

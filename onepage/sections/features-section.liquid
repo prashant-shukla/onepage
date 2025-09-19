@@ -1,0 +1,320 @@
+<section class="features-section color-{{ section.settings.color_scheme }} gradient">
+  <div class="features-section__container">
+    {%- if section.settings.heading != blank -%}
+      <div class="features-section__header">
+        <h2 class="features-section__title">{{ section.settings.heading }}</h2>
+        {%- if section.settings.subheading != blank -%}
+          <p class="features-section__subtitle">{{ section.settings.subheading }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="features-section__content">
+      {%- for block in section.blocks -%}
+        <div class="features-section__item features-section__item--{{ block.settings.alignment }}" {{ block.shopify_attributes }}>
+          <div class="features-section__media">
+            {%- if block.settings.image != blank -%}
+              {%- liquid
+                assign image_alt = block.settings.image.alt | default: block.settings.title | escape
+                assign image_width = block.settings.image.width
+                assign image_height = block.settings.image.height
+                if section.settings.image_ratio == 'adapt'
+                  assign image_height = image_width | divided_by: block.settings.image.aspect_ratio
+                endif
+              -%}
+              {{ block.settings.image | image_url: width: 600 | image_tag:
+                class: 'features-section__image',
+                alt: image_alt,
+                width: image_width,
+                height: image_height,
+                loading: 'lazy',
+                sizes: '(max-width: 750px) 100vw, (max-width: 1200px) 50vw, 600px'
+              }}
+            {%- else -%}
+              <div class="features-section__placeholder">
+                <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="100" height="100" fill="#f3f3f3"/>
+                  <path d="M30 30H70V70H30V30Z" stroke="#ccc" stroke-width="2" fill="none"/>
+                  <path d="M35 35H65V65H35V35Z" fill="#ddd"/>
+                </svg>
+              </div>
+            {%- endif -%}
+          </div>
+
+          <div class="features-section__text">
+            <h3 class="features-section__feature-title">{{ block.settings.title }}</h3>
+            <div class="features-section__description">
+              {{ block.settings.description }}
+            </div>
+            {%- if block.settings.button_text != blank and block.settings.button_url != blank -%}
+              <a href="{{ block.settings.button_url }}" class="features-section__button button button--secondary">
+                {{ block.settings.button_text }}
+              </a>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .features-section {
+    padding: 6rem 0;
+  }
+
+  .features-section__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .features-section__header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .features-section__title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--color-base-text);
+  }
+
+  .features-section__subtitle {
+    font-size: 1.2rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .features-section__content {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+  }
+
+  .features-section__item {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .features-section__item--right {
+    direction: rtl;
+  }
+
+  .features-section__item--right > * {
+    direction: ltr;
+  }
+
+  .features-section__media {
+    position: relative;
+  }
+
+  .features-section__image {
+    width: 100%;
+    height: auto;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .features-section__placeholder {
+    width: 100%;
+    height: 300px;
+    background: #f8f9fa;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .features-section__text {
+    padding: 2rem 0;
+  }
+
+  .features-section__feature-title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--color-base-text);
+  }
+
+  .features-section__description {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #666;
+    margin-bottom: 2rem;
+  }
+
+  .features-section__button {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background: var(--color-base-accent-1);
+    color: white;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .features-section__button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  @media (max-width: 768px) {
+    .features-section__item {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .features-section__item--right {
+      direction: ltr;
+    }
+
+    .features-section__title {
+      font-size: 2.5rem;
+    }
+
+    .features-section__feature-title {
+      font-size: 1.5rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Features Section",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Why Choose Our Product?"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Discover the features that make our product stand out"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "Adapt to image"
+        },
+        {
+          "value": "square",
+          "label": "Square"
+        },
+        {
+          "value": "portrait",
+          "label": "Portrait"
+        },
+        {
+          "value": "landscape",
+          "label": "Landscape"
+        }
+      ],
+      "default": "adapt",
+      "label": "Image ratio"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "background-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Feature Title"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description",
+          "default": "<p>Describe your feature here. Explain how it benefits the customer and why it's important.</p>"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default": "Learn More"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Button URL"
+        },
+        {
+          "type": "select",
+          "id": "alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "Image Left"
+            },
+            {
+              "value": "right",
+              "label": "Image Right"
+            }
+          ],
+          "default": "left",
+          "label": "Image alignment"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Features Section",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Premium Quality",
+            "description": "<p>Made with the finest materials and attention to detail. Our product is built to last and exceed your expectations.</p>",
+            "alignment": "left"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Easy to Use",
+            "description": "<p>Simple setup and intuitive design make our product perfect for everyone, regardless of technical experience.</p>",
+            "alignment": "right"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "24/7 Support",
+            "description": "<p>Our dedicated support team is here to help you get the most out of your purchase, whenever you need assistance.</p>",
+            "alignment": "left"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

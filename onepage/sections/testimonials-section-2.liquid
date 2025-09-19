@@ -1,0 +1,434 @@
+<section class="testimonials-section-2 color-{{ section.settings.color_scheme }} gradient">
+  <div class="testimonials-section-2__container">
+    {%- if section.settings.heading != blank -%}
+      <div class="testimonials-section-2__header">
+        <h2 class="testimonials-section-2__title">{{ section.settings.heading }}</h2>
+        {%- if section.settings.subheading != blank -%}
+          <p class="testimonials-section-2__subtitle">{{ section.settings.subheading }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="testimonials-section-2__slider-wrapper">
+      <div class="testimonials-section-2__slider" id="testimonials-slider-2">
+        {%- for block in section.blocks -%}
+          <div class="testimonials-section-2__slide" {{ block.shopify_attributes }}>
+            <div class="testimonials-section-2__card">
+              {%- if block.settings.image != blank -%}
+                <div class="testimonials-section-2__image-wrapper">
+                  <img src="{{ block.settings.image | image_url: width: 100 }}" 
+                       alt="{{ block.settings.image.alt | escape }}" 
+                       class="testimonials-section-2__image"
+                       width="100" 
+                       height="100" 
+                       loading="lazy">
+                </div>
+              {%- endif -%}
+              
+              <div class="testimonials-section-2__content">
+                <div class="testimonials-section-2__quote">
+                  {{ block.settings.testimonial }}
+                </div>
+                
+                <div class="testimonials-section-2__author">
+                  <div class="testimonials-section-2__author-name">{{ block.settings.name }}</div>
+                  {%- if block.settings.position != blank -%}
+                    <div class="testimonials-section-2__author-position">{{ block.settings.position }}</div>
+                  {%- endif -%}
+                  {%- if block.settings.company != blank -%}
+                    <div class="testimonials-section-2__author-company">{{ block.settings.company }}</div>
+                  {%- endif -%}
+                </div>
+                
+                {%- if block.settings.rating > 0 -%}
+                  <div class="testimonials-section-2__rating">
+                    {%- for i in (1..5) -%}
+                      <span class="testimonials-section-2__star{% if i <= block.settings.rating %} testimonials-section-2__star--filled{% endif %}">★</span>
+                    {%- endfor -%}
+                  </div>
+                {%- endif -%}
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+      
+      {%- if section.blocks.size > 1 -%}
+        <div class="testimonials-section-2__navigation">
+          <button class="testimonials-section-2__nav testimonials-section-2__nav--prev" aria-label="Previous testimonial">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button class="testimonials-section-2__nav testimonials-section-2__nav--next" aria-label="Next testimonial">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .testimonials-section-2 {
+    padding: 6rem 0;
+  }
+
+  .testimonials-section-2__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .testimonials-section-2__header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .testimonials-section-2__title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--color-base-text);
+  }
+
+  .testimonials-section-2__subtitle {
+    font-size: 1.2rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .testimonials-section-2__slider-wrapper {
+    position: relative;
+  }
+
+  .testimonials-section-2__slider {
+    display: flex;
+    gap: 2rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 1rem 0;
+  }
+
+  .testimonials-section-2__slider::-webkit-scrollbar {
+    display: none;
+  }
+
+  .testimonials-section-2__slide {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .testimonials-section-2__card {
+    background: var(--color-base-background-1);
+    border-radius: 1.6rem;
+    padding: 3rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--color-base-accent-2);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .testimonials-section-2__card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .testimonials-section-2__image-wrapper {
+    margin-bottom: 2rem;
+  }
+
+  .testimonials-section-2__image {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto;
+    display: block;
+  }
+
+  .testimonials-section-2__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .testimonials-section-2__quote {
+    font-size: 1.4rem;
+    line-height: 1.6;
+    color: var(--color-base-text);
+    margin-bottom: 2rem;
+    font-style: italic;
+    flex: 1;
+  }
+
+  .testimonials-section-2__author {
+    margin-bottom: 1.5rem;
+  }
+
+  .testimonials-section-2__author-name {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--color-base-text);
+    margin-bottom: 0.5rem;
+  }
+
+  .testimonials-section-2__author-position {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 0.25rem;
+  }
+
+  .testimonials-section-2__author-company {
+    font-size: 1.1rem;
+    color: #888;
+  }
+
+  .testimonials-section-2__rating {
+    display: flex;
+    justify-content: center;
+    gap: 0.25rem;
+  }
+
+  .testimonials-section-2__star {
+    font-size: 1.8rem;
+    color: #ddd;
+    transition: color 0.3s ease;
+  }
+
+  .testimonials-section-2__star--filled {
+    color: #ffc107;
+  }
+
+  .testimonials-section-2__navigation {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .testimonials-section-2__nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--color-base-accent-1);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .testimonials-section-2__nav:hover {
+    background: var(--color-base-accent-2);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .testimonials-section-2__nav:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  @media (min-width: 768px) {
+    .testimonials-section-2__slide {
+      flex: 0 0 calc(50% - 1rem);
+      max-width: calc(50% - 1rem);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .testimonials-section-2__slide {
+      flex: 0 0 calc(33.333% - 1.33rem);
+      max-width: calc(33.333% - 1.33rem);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .testimonials-section-2__title {
+      font-size: 2.5rem;
+    }
+
+    .testimonials-section-2__card {
+      padding: 2rem;
+    }
+
+    .testimonials-section-2__quote {
+      font-size: 1.2rem;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const slider = document.getElementById('testimonials-slider-2');
+    const prevBtn = document.querySelector('.testimonials-section-2__nav--prev');
+    const nextBtn = document.querySelector('.testimonials-section-2__nav--next');
+    const slides = slider.querySelectorAll('.testimonials-section-2__slide');
+    
+    if (!slider || !prevBtn || !nextBtn || slides.length <= 1) return;
+    
+    let currentIndex = 0;
+    const slideWidth = slides[0].offsetWidth + 32; // 32px gap
+    
+    function updateNavigation() {
+      prevBtn.disabled = currentIndex === 0;
+      nextBtn.disabled = currentIndex >= slides.length - 1;
+    }
+    
+    function scrollToSlide(index) {
+      slider.scrollTo({
+        left: index * slideWidth,
+        behavior: 'smooth'
+      });
+    }
+    
+    prevBtn.addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        scrollToSlide(currentIndex);
+        updateNavigation();
+      }
+    });
+    
+    nextBtn.addEventListener('click', () => {
+      if (currentIndex < slides.length - 1) {
+        currentIndex++;
+        scrollToSlide(currentIndex);
+        updateNavigation();
+      }
+    });
+    
+    // Update navigation on scroll
+    slider.addEventListener('scroll', () => {
+      currentIndex = Math.round(slider.scrollLeft / slideWidth);
+      updateNavigation();
+    });
+    
+    // Initialize
+    updateNavigation();
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Testimonials Section 2",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "What Our Customers Say"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Read testimonials from satisfied customers"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "background-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Customer Image"
+        },
+        {
+          "type": "richtext",
+          "id": "testimonial",
+          "label": "Testimonial",
+          "default": "<p>This product has exceeded my expectations. The quality is outstanding and the customer service is excellent!</p>"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Customer Name",
+          "default": "John Doe"
+        },
+        {
+          "type": "text",
+          "id": "position",
+          "label": "Position",
+          "default": "CEO"
+        },
+        {
+          "type": "text",
+          "id": "company",
+          "label": "Company",
+          "default": "Example Corp"
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "min": 0,
+          "max": 5,
+          "step": 1,
+          "default": 5,
+          "label": "Rating"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials Section 2",
+      "blocks": [
+        {
+          "type": "testimonial",
+          "settings": {
+            "testimonial": "<p>Amazing product! The quality and performance exceeded all my expectations. Highly recommended!</p>",
+            "name": "Sarah Johnson",
+            "position": "Marketing Director",
+            "company": "Tech Solutions Inc",
+            "rating": 5
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "testimonial": "<p>Outstanding customer service and a fantastic product. Will definitely purchase again!</p>",
+            "name": "Michael Chen",
+            "position": "Product Manager",
+            "company": "Innovation Labs",
+            "rating": 5
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "testimonial": "<p>Great value for money. The product works exactly as described and delivery was fast.</p>",
+            "name": "Emily Davis",
+            "position": "Business Owner",
+            "company": "Creative Agency",
+            "rating": 4
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

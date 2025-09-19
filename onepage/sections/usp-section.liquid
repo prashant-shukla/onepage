@@ -1,0 +1,196 @@
+<section class="usp-section color-{{ section.settings.color_scheme }} gradient">
+  <div class="usp-section__container">
+    <div class="usp-section__grid">
+      {%- for block in section.blocks -%}
+        <div class="usp-section__item" {{ block.shopify_attributes }}>
+          <div class="usp-section__icon">
+            {%- if block.settings.icon != blank -%}
+              {{ block.settings.icon | image_url: width: 60 | image_tag: alt: block.settings.title }}
+            {%- else -%}
+              <div class="usp-section__icon-placeholder">
+                {{ block.settings.icon_text | default: '✓' }}
+              </div>
+            {%- endif -%}
+          </div>
+          <div class="usp-section__content">
+            <h3 class="usp-section__title">{{ block.settings.title }}</h3>
+            <p class="usp-section__description">{{ block.settings.description }}</p>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .usp-section {
+    padding: 4rem 0;
+    background: var(--color-base-background-2);
+  }
+
+  .usp-section__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .usp-section__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+
+  .usp-section__item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .usp-section__item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .usp-section__icon {
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-base-accent-1);
+    border-radius: 50%;
+  }
+
+  .usp-section__icon img {
+    width: 30px;
+    height: 30px;
+    filter: brightness(0) invert(1);
+  }
+
+  .usp-section__icon-placeholder {
+    font-size: 1.5rem;
+    color: white;
+    font-weight: bold;
+  }
+
+  .usp-section__content {
+    flex: 1;
+  }
+
+  .usp-section__title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--color-base-text);
+  }
+
+  .usp-section__description {
+    font-size: 0.95rem;
+    color: #666;
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .usp-section__grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .usp-section__item {
+      padding: 1rem;
+    }
+
+    .usp-section__icon {
+      width: 50px;
+      height: 50px;
+    }
+
+    .usp-section__icon img {
+      width: 25px;
+      height: 25px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "USP Section",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "background-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "usp_item",
+      "name": "USP Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon Image"
+        },
+        {
+          "type": "text",
+          "id": "icon_text",
+          "label": "Icon Text",
+          "default": "✓",
+          "info": "Used if no icon image is provided"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Free Shipping"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description",
+          "default": "Free shipping on all orders over $50"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "USP Section",
+      "blocks": [
+        {
+          "type": "usp_item",
+          "settings": {
+            "title": "Free Shipping",
+            "description": "Free shipping on all orders over $50"
+          }
+        },
+        {
+          "type": "usp_item",
+          "settings": {
+            "title": "Secure Checkout",
+            "description": "Your payment information is safe and secure"
+          }
+        },
+        {
+          "type": "usp_item",
+          "settings": {
+            "title": "30-Day Returns",
+            "description": "Not satisfied? Return within 30 days"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

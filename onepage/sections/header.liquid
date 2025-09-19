@@ -1,0 +1,1314 @@
+<header class="header{% if settings.sticky_menu %} header--sticky{% endif %}" data-theme="light">
+  {%- assign has_headlines = false -%}
+  {%- for block in section.blocks -%}
+    {%- if block.type == 'headline' and block.settings.headline_text != blank -%}
+      {%- assign has_headlines = true -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+  
+  {%- if section.settings.show_scrolling_headlines and has_headlines -%}
+    <div class="header__headlines">
+      <div class="header__headlines-container">
+        <div class="header__headlines-content">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'headline' and block.settings.headline_text != blank -%}
+              <div class="header__headline-item" {{ block.shopify_attributes }}>
+                {{ block.settings.headline_text }}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+  
+  <div class="header__inner">
+    <div class="header__heading">
+      <a href="{{ routes.root_url }}" class="header__heading-link">
+        {%- if settings.logo != blank -%}
+          <div class="header__heading-logo-wrapper">
+            {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
+            {%- assign logo_height = settings.logo_width | divided_by: settings.logo.aspect_ratio -%}
+            {%- capture sizes -%}(max-width: {{ settings.page_width }}px) {{ settings.logo_width | times: 2 }}px, {{ settings.logo_width }}px{%- endcapture -%}
+            {%- capture widths -%}{{ settings.logo_width }}, {{ settings.logo_width | times: 2 }}{%- endcapture -%}
+            {{ settings.logo | image_url: width: 600 | image_tag:
+              class: 'header__heading-logo motion-reduce',
+              widths: widths,
+              height: logo_height,
+              width: settings.logo_width,
+              alt: logo_alt,
+              sizes: sizes,
+              preload: true
+            }}
+          </div>
+        {%- else -%}
+          <span class="header__title">{{ shop.name }}</span>
+        {%- endif -%}
+      </a>
+    </div>
+
+    <nav class="header__nav" id="main-navigation">
+      <ul class="header__menu">
+        {%- for link in linklists[settings.main_menu].links -%}
+          <li class="header__menu-item">
+            <a href="{{ link.url }}" class="header__menu-link{% if link.active %} header__menu-link--active{% endif %}">
+              {{ link.title }}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <div class="header__icons">
+      <button class="header__theme-toggle" id="theme-toggle" title="Toggle theme">
+        <svg class="theme-icon theme-icon--light" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3V1M12 21V23M4.22 4.22L2.81 2.81M19.78 19.78L21.19 21.19M3 12H1M23 12H21M4.22 19.78L2.81 21.19M19.78 4.22L21.19 2.81M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <svg class="theme-icon theme-icon--dark" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      {%- if settings.show_search -%}
+        <a href="{{ routes.search_url }}" class="header__icon header__icon--search" title="Search">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      {%- endif -%}
+
+      {%- if shop.customer_accounts_enabled -%}
+        <a href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}" class="header__icon header__icon--account" title="Account">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      {%- endif -%}
+
+      {%- if settings.cart_type == 'drawer' -%}
+        <button class="header__icon header__icon--cart" id="cart-icon-bubble" title="Shopping Cart" onclick="toggleCartDrawer()">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.7 15.3C4.3 15.7 4.6 16.5 5.1 16.5H17M17 13V17C17 17.6 16.6 18 16 18H8C7.4 18 7 17.6 7 17V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          {%- if cart != empty -%}
+            <div class="cart-count-bubble">
+              {%- if cart.item_count < 100 -%}
+                <span aria-hidden="true">{{ cart.item_count }}</span>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </button>
+      {%- else -%}
+        <a href="{{ routes.cart_url }}" class="header__icon header__icon--cart" id="cart-icon-bubble" title="Shopping Cart">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.7 15.3C4.3 15.7 4.6 16.5 5.1 16.5H17M17 13V17C17 17.6 16.6 18 16 18H8C7.4 18 7 17.6 7 17V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          {%- if cart != empty -%}
+            <div class="cart-count-bubble">
+              {%- if cart.item_count < 100 -%}
+                <span aria-hidden="true">{{ cart.item_count }}</span>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </a>
+      {%- endif -%}
+
+      <button class="header__mobile-toggle" id="mobile-menu-toggle" title="Toggle mobile menu" aria-label="Toggle mobile menu">
+        <span class="hamburger">
+          <span class="hamburger__line"></span>
+          <span class="hamburger__line"></span>
+          <span class="hamburger__line"></span>
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="header__mobile-overlay" id="mobile-menu-overlay"></div>
+  
+  <!-- Mobile Menu -->
+  <div class="header__mobile-menu" id="mobile-menu">
+    <div class="header__mobile-menu-header">
+      <span class="header__mobile-menu-title">Menu</span>
+      <button class="header__mobile-menu-close" id="mobile-menu-close" title="Close menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    
+    <nav class="header__mobile-nav">
+      <ul class="header__mobile-menu-list">
+        {%- for link in linklists[settings.main_menu].links -%}
+          <li class="header__mobile-menu-item">
+            <a href="{{ link.url }}" class="header__mobile-menu-link{% if link.active %} header__mobile-menu-link--active{% endif %}">
+              {{ link.title }}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- Cart Drawer -->
+<div id="cart-drawer" class="cart-drawer">
+  <div class="cart-drawer__overlay" onclick="closeCartDrawer()"></div>
+  <div class="cart-drawer__content">
+    <div class="cart-drawer__header">
+      <h3 class="cart-drawer__title">Shopping Cart</h3>
+      <button class="cart-drawer__close" onclick="closeCartDrawer()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="cart-drawer__body">
+      <div id="cart-drawer-items" class="cart-drawer__items">
+        <!-- Cart items will be loaded here -->
+      </div>
+    </div>
+    <div class="cart-drawer__footer">
+      <div class="cart-drawer__total">
+        <span class="cart-drawer__total-label">Total:</span>
+        <span class="cart-drawer__total-amount" id="cart-drawer-total">$0.00</span>
+      </div>
+      <div class="cart-drawer__actions">
+        <a href="{{ routes.cart_url }}" class="button button--secondary">View Cart</a>
+        <a href="{{ routes.cart_url }}" class="button button--primary">Checkout</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Cart Drawer Functions
+  function toggleCartDrawer() {
+    const cartDrawer = document.getElementById('cart-drawer');
+    cartDrawer.classList.toggle('active');
+    if (cartDrawer.classList.contains('active')) {
+      loadCartItems();
+    }
+  }
+
+  function closeCartDrawer() {
+    const cartDrawer = document.getElementById('cart-drawer');
+    cartDrawer.classList.remove('active');
+  }
+
+  function loadCartItems() {
+    fetch('/cart.js')
+      .then(response => response.json())
+      .then(cart => {
+        const cartItemsContainer = document.getElementById('cart-drawer-items');
+        const cartTotal = document.getElementById('cart-drawer-total');
+        
+        if (cart.items.length === 0) {
+          cartItemsContainer.innerHTML = '<p>Your cart is empty</p>';
+          cartTotal.textContent = '$0.00';
+          return;
+        }
+
+        cartItemsContainer.innerHTML = cart.items.map(item => `
+          <div class="cart-drawer__item">
+            <img src="${item.image}" alt="${item.title}" class="cart-drawer__item-image">
+            <div class="cart-drawer__item-details">
+              <h4 class="cart-drawer__item-title">${item.title}</h4>
+              <p class="cart-drawer__item-price">$${(item.price / 100).toFixed(2)} x ${item.quantity}</p>
+            </div>
+          </div>
+        `).join('');
+
+        cartTotal.textContent = `$${(cart.total_price / 100).toFixed(2)}`;
+      })
+      .catch(error => {
+        console.error('Error loading cart:', error);
+        document.getElementById('cart-drawer-items').innerHTML = '<p>Error loading cart items</p>';
+      });
+  }
+
+  // Close cart drawer when clicking on overlay
+  document.addEventListener('click', function(event) {
+    const cartDrawer = document.getElementById('cart-drawer');
+    const overlay = document.querySelector('.cart-drawer__overlay');
+    if (event.target === overlay) {
+      closeCartDrawer();
+    }
+  });
+</script>
+
+<style>
+  :root {
+    --header-bg-light: rgba(255, 255, 255, 0.95);
+    --header-bg-dark: rgba(30, 30, 30, 0.95);
+    --header-text-light: #2c3e50;
+    --header-text-dark: #ffffff;
+    --header-border-light: rgba(0, 0, 0, 0.1);
+    --header-border-dark: rgba(255, 255, 255, 0.1);
+    --header-icon-bg-light: rgba(248, 249, 250, 0.8);
+    --header-icon-bg-dark: rgba(60, 60, 60, 0.8);
+    --header-icon-color-light: #6c757d;
+    --header-icon-color-dark: #b0b0b0;
+    --header-menu-hover-light: rgba(0, 123, 255, 0.1);
+    --header-menu-hover-dark: rgba(100, 200, 255, 0.2);
+    --primary-color: {{ settings.primary_color | default: '#007bff' }};
+    --secondary-color: {{ settings.secondary_color | default: '#6c757d' }};
+    --accent-color: {{ settings.accent_color | default: '#28a745' }};
+  }
+
+  .header {
+    background: var(--header-bg-light);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--header-border-light);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1000;
+    margin: 0;
+    padding: 0;
+    transition: all 0.3s ease;
+  }
+
+  /* Scrolling Headlines */
+  .header__headlines {
+    background: {{ section.settings.headlines_background_color | default: '#007bff' }};
+    color: {{ section.settings.headlines_text_color | default: '#ffffff' }};
+    overflow: hidden;
+    position: relative;
+    height: {{ section.settings.headlines_height | default: 40 }}px;
+    display: flex;
+    align-items: center;
+  }
+
+  .header[data-theme="dark"] .header__headlines {
+    background: {{ section.settings.headlines_background_color | default: '#007bff' }};
+  }
+
+  .header__headlines-container {
+    max-width: {{ settings.page_width | default: 1200 }}px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    width: 100%;
+  }
+
+  .header__headlines-content {
+    display: flex;
+    animation: scroll-headlines-{{ section.settings.headlines_direction | default: 'right' }} {{ section.settings.scroll_duration | default: 20 }}s linear infinite;
+    white-space: nowrap;
+  }
+
+  .header__headline-item {
+    display: inline-block;
+    padding: 0 2rem;
+    font-size: {{ section.settings.headlines_font_size | default: 13 }}px;
+    font-weight: {{ section.settings.headlines_font_weight | default: 600 }};
+    color: {{ section.settings.headlines_text_color | default: '#ffffff' }};
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .header__headline-item:not(:last-child)::after {
+    content: "•";
+    margin-left: 2rem;
+    opacity: 0.7;
+  }
+
+  @keyframes scroll-headlines-right {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+  @keyframes scroll-headlines-left {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  {%- if section.settings.headlines_pause_on_hover -%}
+  .header__headlines:hover .header__headlines-content {
+    animation-play-state: paused;
+  }
+  {%- endif -%}
+
+  .header--sticky {
+    position: sticky;
+    top: 0;
+  }
+
+  .header[data-theme="dark"] {
+    background: var(--header-bg-dark);
+    border-bottom-color: var(--header-border-dark);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .header__inner {
+    max-width: {{ settings.page_width | default: 1200 }}px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: {{ settings.header_height | default: 75 }}px;
+  }
+
+  .header__heading {
+    flex: 1;
+  }
+
+  .header__heading-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+  }
+
+  .header__heading-logo-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  .header__heading-logo {
+    max-height: {{ settings.logo_width | default: 150 | divided_by: 2 }}px;
+    width: auto;
+    transition: transform 0.3s ease;
+  }
+
+  .header__heading-logo:hover {
+    transform: scale(1.05);
+  }
+
+  .header__title {
+    font-size: 2.6rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+    transition: all 0.3s ease;
+  }
+
+  .header[data-theme="dark"] .header__title {
+    background: linear-gradient(135deg, #64b5f6 0%, #42a5f5 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .header__nav {
+    display: flex;
+    align-items: center;
+  }
+
+  .header__menu {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 0.5rem;
+  }
+
+  .header__menu-item {
+    margin: 0;
+  }
+
+  .header__menu-link {
+    text-decoration: none;
+    color: var(--header-text-light);
+    font-weight: 600;
+    font-size: 1.4rem;
+    transition: all 0.3s ease;
+    padding: 1rem 1.5rem;
+    border-radius: 1rem;
+    position: relative;
+    overflow: hidden;
+    display: block;
+  }
+
+  .header[data-theme="dark"] .header__menu-link {
+    color: var(--header-text-dark);
+  }
+
+  .header__menu-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 123, 255, 0.1), transparent);
+    transition: left 0.5s;
+  }
+
+  .header[data-theme="dark"] .header__menu-link::before {
+    background: linear-gradient(90deg, transparent, rgba(100, 200, 255, 0.2), transparent);
+  }
+
+  .header__menu-link:hover::before {
+    left: 100%;
+  }
+
+  .header__menu-link:hover,
+  .header__menu-link--active {
+    background: var(--header-menu-hover-light);
+    transform: translateY(-2px);
+    color: var(--primary-color);
+  }
+
+  .header[data-theme="dark"] .header__menu-link:hover,
+  .header[data-theme="dark"] .header__menu-link--active {
+    background: var(--header-menu-hover-dark);
+    color: #64b5f6;
+  }
+
+  .header__icons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .header__theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: var(--header-icon-bg-light);
+    color: var(--header-icon-color-light);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .header[data-theme="dark"] .header__theme-toggle {
+    background: var(--header-icon-bg-dark);
+    color: var(--header-icon-color-dark);
+  }
+
+  .header__theme-toggle:hover {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color) 100%);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+  }
+
+  .header[data-theme="dark"] .header__theme-toggle:hover {
+    background: linear-gradient(135deg, #64b5f6 0%, #42a5f5 100%);
+  }
+
+  .theme-icon {
+    position: absolute;
+    transition: all 0.3s ease;
+  }
+
+  .theme-icon--light {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+
+  .theme-icon--dark {
+    opacity: 0;
+    transform: rotate(180deg);
+  }
+
+  .header[data-theme="dark"] .theme-icon--light {
+    opacity: 0;
+    transform: rotate(-180deg);
+  }
+
+  .header[data-theme="dark"] .theme-icon--dark {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+
+  .header__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: var(--header-icon-bg-light);
+    color: var(--header-icon-color-light);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+    border: 2px solid transparent;
+  }
+
+  .header[data-theme="dark"] .header__icon {
+    background: var(--header-icon-bg-dark);
+    color: var(--header-icon-color-dark);
+  }
+
+  .header__icon:hover {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color) 100%);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .header[data-theme="dark"] .header__icon:hover {
+    background: linear-gradient(135deg, #64b5f6 0%, #42a5f5 100%);
+  }
+
+  .header__icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .cart-count-bubble {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+
+  /* Mobile Menu Toggle */
+  .header__mobile-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: var(--header-icon-bg-light);
+    color: var(--header-icon-color-light);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .header[data-theme="dark"] .header__mobile-toggle {
+    background: var(--header-icon-bg-dark);
+    color: var(--header-icon-color-dark);
+  }
+
+  .header__mobile-toggle:hover {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color) 100%);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+  }
+
+  .header[data-theme="dark"] .header__mobile-toggle:hover {
+    background: linear-gradient(135deg, #64b5f6 0%, #42a5f5 100%);
+  }
+
+  /* Hamburger Animation */
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    width: 20px;
+    height: 16px;
+    position: relative;
+  }
+
+  .hamburger__line {
+    width: 100%;
+    height: 2px;
+    background: currentColor;
+    border-radius: 1px;
+    transition: all 0.3s ease;
+    transform-origin: center;
+  }
+
+  .hamburger__line:nth-child(1) {
+    margin-bottom: 4px;
+  }
+
+  .hamburger__line:nth-child(2) {
+    margin-bottom: 4px;
+  }
+
+  .header__mobile-toggle.active .hamburger__line:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
+
+  .header__mobile-toggle.active .hamburger__line:nth-child(2) {
+    opacity: 0;
+  }
+
+  .header__mobile-toggle.active .hamburger__line:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
+  }
+
+  /* Mobile Menu Overlay */
+  .header__mobile-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .header__mobile-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Mobile Menu */
+  .header__mobile-menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 320px;
+    height: 100vh;
+    background: var(--header-bg-light);
+    z-index: 1000;
+    transition: right 0.3s ease, visibility 0.3s ease, opacity 0.3s ease;
+    overflow-y: auto;
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.1);
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  .header[data-theme="dark"] .header__mobile-menu {
+    background: var(--header-bg-dark);
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .header__mobile-menu.active {
+    right: 0;
+    visibility: visible;
+    opacity: 1;
+  }
+
+  /* Cart Drawer */
+  .cart-drawer {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 400px;
+    height: 100vh;
+    z-index: 9999;
+    transition: right 0.3s ease;
+    display: none;
+  }
+
+  .cart-drawer.active {
+    right: 0;
+    display: block;
+  }
+
+  .cart-drawer__overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 9998;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+
+  .cart-drawer.active .cart-drawer__overlay {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .cart-drawer__content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+  }
+
+  /* Dark theme support for cart drawer */
+  [data-theme="dark"] .cart-drawer__content {
+    background: #1a1a1a;
+    color: #ffffff;
+  }
+
+  [data-theme="dark"] .cart-drawer__title {
+    color: #ffffff;
+  }
+
+  [data-theme="dark"] .cart-drawer__close {
+    color: #ffffff;
+  }
+
+  [data-theme="dark"] .cart-drawer__close:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  [data-theme="dark"] .cart-drawer__item-title {
+    color: #ffffff;
+  }
+
+  [data-theme="dark"] .cart-drawer__item-price {
+    color: #cccccc;
+  }
+
+  [data-theme="dark"] .cart-drawer__total-label {
+    color: #ffffff;
+  }
+
+  [data-theme="dark"] .cart-drawer__total-amount {
+    color: #4CAF50;
+  }
+
+  [data-theme="dark"] .cart-drawer__item {
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .cart-drawer__header {
+    padding: 2rem;
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .cart-drawer__title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-heading);
+    margin: 0;
+  }
+
+  .cart-drawer__close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text);
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease;
+  }
+
+  .cart-drawer__close:hover {
+    background: var(--color-border);
+  }
+
+  .cart-drawer__body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2rem;
+  }
+
+  .cart-drawer__items {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .cart-drawer__item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+  }
+
+  .cart-drawer__item-image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+  }
+
+  .cart-drawer__item-details {
+    flex: 1;
+  }
+
+  .cart-drawer__item-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--color-heading);
+    margin: 0 0 0.5rem 0;
+  }
+
+  .cart-drawer__item-price {
+    font-size: 1.2rem;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .cart-drawer__footer {
+    padding: 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .cart-drawer__total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+  .cart-drawer__total-label {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--color-heading);
+  }
+
+  .cart-drawer__total-amount {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--color-button-primary);
+  }
+
+  .cart-drawer__actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .cart-drawer__actions .button {
+    flex: 1;
+  }
+
+  @media (max-width: 768px) {
+    .cart-drawer {
+      width: 100vw;
+    }
+  }
+
+  .header__mobile-menu-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem;
+    border-bottom: 1px solid var(--header-border-light);
+  }
+
+  .header[data-theme="dark"] .header__mobile-menu-header {
+    border-bottom-color: var(--header-border-dark);
+  }
+
+  .header__mobile-menu-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--header-text-light);
+  }
+
+  .header[data-theme="dark"] .header__mobile-menu-title {
+    color: var(--header-text-dark);
+  }
+
+  .header__mobile-menu-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--header-icon-bg-light);
+    color: var(--header-icon-color-light);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .header[data-theme="dark"] .header__mobile-menu-close {
+    background: var(--header-icon-bg-dark);
+    color: var(--header-icon-color-dark);
+  }
+
+  .header__mobile-menu-close:hover {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color) 100%);
+    color: white;
+  }
+
+  .header__mobile-nav {
+    padding: 2rem;
+  }
+
+  .header__mobile-menu-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .header__mobile-menu-item {
+    margin-bottom: 0.5rem;
+  }
+
+  .header__mobile-menu-link {
+    display: block;
+    padding: 1.5rem 1rem;
+    color: var(--header-text-light);
+    text-decoration: none;
+    font-size: 1.6rem;
+    font-weight: 600;
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .header[data-theme="dark"] .header__mobile-menu-link {
+    color: var(--header-text-dark);
+  }
+
+  .header__mobile-menu-link:hover,
+  .header__mobile-menu-link--active {
+    background: var(--header-menu-hover-light);
+    color: var(--primary-color);
+    transform: translateX(10px);
+  }
+
+  .header[data-theme="dark"] .header__mobile-menu-link:hover,
+  .header[data-theme="dark"] .header__mobile-menu-link--active {
+    background: var(--header-menu-hover-dark);
+    color: #64b5f6;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .header__inner {
+      padding: 0 1rem;
+      height: 65px;
+    }
+
+    .header__nav {
+      display: none;
+    }
+
+    .header__mobile-toggle {
+      display: flex;
+    }
+
+    .header__title {
+      font-size: 2.2rem;
+    }
+
+    .header__icons {
+      gap: 0.8rem;
+    }
+
+    .header__icon,
+    .header__theme-toggle {
+      width: 40px;
+      height: 40px;
+    }
+
+    .header__icon svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .header__mobile-menu {
+      width: 100%;
+    }
+  }
+
+  /* Prevent body scroll when mobile menu is open */
+  body.mobile-menu-open {
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const themeToggle = document.getElementById('theme-toggle');
+    const header = document.querySelector('.header');
+    const body = document.body;
+    const mobileToggle = document.getElementById('mobile-menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileOverlay = document.getElementById('mobile-menu-overlay');
+    const mobileClose = document.getElementById('mobile-menu-close');
+    
+    // Get saved theme or default to light
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    
+    // Apply saved theme
+    applyTheme(savedTheme);
+    
+    // Theme toggle functionality
+    themeToggle.addEventListener('click', function() {
+      const currentTheme = header.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      
+      applyTheme(newTheme);
+      localStorage.setItem('theme', newTheme);
+    });
+    
+    // Mobile menu functionality
+    mobileToggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleMobileMenu();
+    });
+    
+    mobileClose.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      closeMobileMenu();
+    });
+    
+    mobileOverlay.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      closeMobileMenu();
+    });
+    
+    // Close mobile menu on escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
+        closeMobileMenu();
+      }
+    });
+    
+    // Close mobile menu when clicking on menu links
+    const mobileMenuLinks = document.querySelectorAll('.header__mobile-menu-link');
+    mobileMenuLinks.forEach(function(link) {
+      link.addEventListener('click', function() {
+        closeMobileMenu();
+      });
+    });
+    
+    function applyTheme(theme) {
+      header.setAttribute('data-theme', theme);
+      body.setAttribute('data-theme', theme);
+      
+      // Update CSS custom properties
+      if (theme === 'dark') {
+        document.documentElement.style.setProperty('--header-bg-light', 'rgba(30, 30, 30, 0.95)');
+        document.documentElement.style.setProperty('--header-text-light', '#ffffff');
+        document.documentElement.style.setProperty('--header-border-light', 'rgba(255, 255, 255, 0.1)');
+        document.documentElement.style.setProperty('--header-icon-bg-light', 'rgba(60, 60, 60, 0.8)');
+        document.documentElement.style.setProperty('--header-icon-color-light', '#b0b0b0');
+        document.documentElement.style.setProperty('--header-menu-hover-light', 'rgba(100, 200, 255, 0.2)');
+      } else {
+        document.documentElement.style.setProperty('--header-bg-light', 'rgba(255, 255, 255, 0.95)');
+        document.documentElement.style.setProperty('--header-text-light', '#2c3e50');
+        document.documentElement.style.setProperty('--header-border-light', 'rgba(0, 0, 0, 0.1)');
+        document.documentElement.style.setProperty('--header-icon-bg-light', 'rgba(248, 249, 250, 0.8)');
+        document.documentElement.style.setProperty('--header-icon-color-light', '#6c757d');
+        document.documentElement.style.setProperty('--header-menu-hover-light', 'rgba(0, 123, 255, 0.1)');
+      }
+    }
+    
+    function toggleMobileMenu() {
+      const isActive = mobileMenu.classList.contains('active');
+      
+      if (isActive) {
+        closeMobileMenu();
+      } else {
+        openMobileMenu();
+      }
+    }
+    
+    function openMobileMenu() {
+      mobileMenu.classList.add('active');
+      mobileOverlay.classList.add('active');
+      mobileToggle.classList.add('active');
+      body.classList.add('mobile-menu-open');
+    }
+    
+    function closeMobileMenu() {
+      mobileMenu.classList.remove('active');
+      mobileOverlay.classList.remove('active');
+      mobileToggle.classList.remove('active');
+      body.classList.remove('mobile-menu-open');
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Header",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Scrolling Headlines"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_scrolling_headlines",
+      "label": "Show Scrolling Headlines",
+      "default": true,
+      "info": "Display scrolling headlines at the top of the header"
+    },
+    {
+      "type": "range",
+      "id": "scroll_duration",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "s",
+      "label": "Scroll Duration",
+      "default": 20,
+      "info": "How long it takes for headlines to complete one scroll cycle"
+    },
+    {
+      "type": "header",
+      "content": "Headlines Styling"
+    },
+    {
+      "type": "color",
+      "id": "headlines_background_color",
+      "label": "Background Color",
+      "default": "#007bff"
+    },
+    {
+      "type": "color",
+      "id": "headlines_text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "headlines_height",
+      "min": 30,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Headlines Height",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "headlines_font_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Font Size",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "headlines_font_weight",
+      "label": "Font Weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi Bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "checkbox",
+      "id": "headlines_pause_on_hover",
+      "label": "Pause on Hover",
+      "default": true,
+      "info": "Pause scrolling when user hovers over headlines"
+    },
+    {
+      "type": "select",
+      "id": "headlines_direction",
+      "label": "Scroll Direction",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left to Right"
+        },
+        {
+          "value": "right",
+          "label": "Right to Left"
+        }
+      ],
+      "default": "right"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "headline",
+      "name": "Headline",
+      "settings": [
+        {
+          "type": "text",
+          "id": "headline_text",
+          "label": "Headline Text",
+          "default": "Welcome to our store! Free shipping on orders over $50"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header",
+      "settings": {
+        "show_scrolling_headlines": true,
+        "scroll_duration": 20,
+        "headlines_background_color": "#007bff",
+        "headlines_text_color": "#ffffff",
+        "headlines_height": 40,
+        "headlines_font_size": 13,
+        "headlines_font_weight": "600",
+        "headlines_pause_on_hover": true,
+        "headlines_direction": "right"
+      },
+      "blocks": [
+        {
+          "type": "headline",
+          "settings": {
+            "headline_text": "Welcome to our store! Free shipping on orders over $50"
+          }
+        },
+        {
+          "type": "headline",
+          "settings": {
+            "headline_text": "New arrivals every week! Check out our latest collection"
+          }
+        },
+        {
+          "type": "headline",
+          "settings": {
+            "headline_text": "Sign up for our newsletter and get 10% off your first order"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
